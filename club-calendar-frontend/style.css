@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin: 10px 0;
+}
+
+#mainContainer {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+#calendar {
+  width: 50%;
+  min-width: 500px;
+  height: 600px; /* ✅ Fixed height to make calendar visible */
+  margin: 10px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  padding: 10px;
+}
+
+#eventDetails {
+  width: 50%;
+  background: white;
+  margin: 10px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  overflow-y: auto;
+}
+
+/* FullCalendar styling */
+.fc {
+  background: white;
+  height: 100%;
+}
+
+.fc-daygrid-day {
+  min-height: 80px;
+  border: 1px solid #eee;
+}
+
+.fc-daygrid-day-number {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 4px;
+}
