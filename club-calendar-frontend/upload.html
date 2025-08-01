@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Event</title>
+  <!-- 
+    DOCSTRING: upload.html
+    Allows users to create events with files
+    - Saves events to localStorage
+    - Broadcasts updates to index.html via BroadcastChannel
+    - Converts files to Base64 for downloadable links
+  -->
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #f4f4f4; }
+    .upload-box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.1); text-align: center; }
+    input, button { margin: 10px; padding: 10px; }
+  </style>
+</head>
+<body>
+  <div class="upload-box">
+    <h2>Add Event</h2>
+    <input type="date" id="eventDate"><br>
+    <input type="text" id="eventTitle" placeholder="Event Title"><br>
+    <input type="time" id="startTime"><br>
+    <input type="time" id="endTime"><br>
+    <input type="file" id="eventFile"><br>
+    <button onclick="saveEvent()">Save Event</button>
+  </div>
+
+  <script>
+    const bc = new BroadcastChannel('clubCalendarChannel');
+
+    function saveEvent() {
+      const title = document.getElementById('eventTitle').value.trim();
+      const date = document.getElementById('eventDate').value;
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+      const file = document.getElementById('eventFile').files[0];
+
+      if (!date) { alert("Please select a date."); return; }
+      if (!title && !file) { alert("Please enter a title or select a file."); return; }
+
+      const saveData = (fileName=null, fileData=null) => {
+        const newEvent = { title: title || '(File Upload)', date, startTime: startTime || null, endTime: endTime || null, fileName, fileData };
+        const stored = localStorage.getItem('clubEvents');
+        const events = stored ? JSON.parse(stored) : [];
+        events.push(newEvent);
+        localStorage.setItem('clubEvents', JSON.stringify(events));
+        bc.postMessage('refresh');
+        alert("Event saved! Calendar updated.");
+        window.close();
+      };
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => saveData(file.name, e.target.result);
+        reader.readAsDataURL(file);
+      } else {
+        saveData();
+      }
+    }
+  </script>
+</body>
+</html>
