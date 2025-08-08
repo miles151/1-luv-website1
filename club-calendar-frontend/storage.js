@@ -1,64 +1,27 @@
 /**
  * DOCSTRING: storage.js
- * Handles event persistence
- * - LocalStorage for metadata
- * - IndexedDB for file storage (blobs)
+ * Handles loading and sending events for One1LuvMCPhoenix Calendar
+ * - Fetches events from backend server (Express)
+ * - Sends SMS via backend endpoint (optional)
  */
 
 export const Storage = {
   events: [],
-  db: null,
 
-  async init() {
-    await this.initDB();
-    this.loadFromLocal();
+  async loadEvents() {
+    try {
+      const response = await fetch('http://localhost:5000/events');
+      if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+      this.events = await response.json();
+      console.log('Events loaded:', this.events);
+    } catch (err) {
+      console.error('Failed to fetch events:', err);
+      alert('Backend not running. Please start server.js');
+      this.events = []; // fallback to empty
+    }
   },
 
-  async initDB() {
-    return new Promise((resolve) => {
-      const request = indexedDB.open("ClubCalendarDB", 1);
-      request.onupgradeneeded = (e) => {
-        const db = e.target.result;
-        if (!db.objectStoreNames.contains('files')) {
-          db.createObjectStore('files');
-        }
-      };
-      request.onsuccess = (e) => {
-        this.db = e.target.result;
-        resolve();
-      };
-    });
-  },
-
-  loadFromLocal() {
-    const stored = localStorage.getItem('clubEvents');
-    this.events = stored ? JSON.parse(stored) : [];
-  },
-
-  saveToLocal() {
-    localStorage.setItem('clubEvents', JSON.stringify(this.events));
-  },
-
-  async saveFile(file) {
-    return new Promise((resolve) => {
-      const tx = this.db.transaction('files', 'readwrite');
-      const store = tx.objectStore('files');
-      const putReq = store.put(file, file.name);
-      putReq.onsuccess = () => resolve(file.name);
-    });
-  },
-
-  async getFile(name) {
-    return new Promise((resolve) => {
-      const tx = this.db.transaction('files', 'readonly');
-      const store = tx.objectStore('files');
-      const getReq = store.get(name);
-      getReq.onsuccess = () => resolve(getReq.result);
-    });
-  },
-
-  addEvent(event) {
-    this.events.push(event);
-    this.saveToLocal();
+  async sendEventsSMS(phoneNumber) {
+    alert(`SMS feature placeholder. Would send events to ${phoneNumber}`);
   }
 };

@@ -1,9 +1,9 @@
-/*
+/**
  * DOCSTRING: calendar.js
- * Handles FullCalendar initialization and event rendering
- * - Loads events from Storage
- * - Adds incremental updates
- * - Updates side panel and upcoming events
+ * Initializes and renders FullCalendar for Club Calendar
+ * - Loads events from backend via Storage
+ * - Enables event editing/deletion via UI interaction
+ * - Dynamically updates displayed events
  */
 
 export const Calendar = {
@@ -14,7 +14,7 @@ export const Calendar = {
   async init(Storage, UI) {
     this.Storage = Storage;
     this.UI = UI;
-    await this.Storage.init();
+    await this.Storage.loadEvents();
     this.UI.init(Storage, this);
 
     const calendarEl = document.getElementById('calendar');
@@ -29,73 +29,53 @@ export const Calendar = {
       selectable: true,
       editable: true,
       events: this.generateEvents(),
-      eventClick: (info) => {
-        const date = info.event.startStr.split('T')[0];
-        this.updateSidePanel(date);
-      }
+      eventClick: (info) => this.handleEventClick(info)
     });
 
     this.calendar.render();
     this.updateUpcomingEvents();
 
-    // BroadcastChannel listener for auto-refresh
     const bc = new BroadcastChannel('clubCalendarChannel');
     bc.onmessage = () => this.refresh();
   },
 
   generateEvents() {
-    return this.Storage.events.map(e => {
-      const start = e.startTime ? `${e.date}T${e.startTime}` : e.date;
-      const end = e.endTime ? `${e.date}T${e.endTime}` : null;
-      let displayTitle = e.title;
-      if (e.startTime && e.endTime) displayTitle += ` (${e.startTime}-${e.endTime})`;
-      else if (e.startTime) displayTitle += ` (${e.startTime})`;
-      return { title: displayTitle, start, end: end || undefined, allDay: !e.startTime };
-    });
+    return this.Storage.events.map(e => ({
+      id: e.id,
+      title: e.title,
+      start: e.startTime ? `${e.date}T${e.startTime}` : e.date,
+      end: e.endTime ? `${e.date}T${e.endTime}` : undefined,
+      allDay: !e.startTime
+    }));
   },
 
-  addEvent(event) {
-    const newFCEvent = {
-      title: event.title,
-      start: event.startTime ? `${event.date}T${event.startTime}` : event.date,
-      end: event.endTime ? `${event.date}T${event.endTime}` : undefined,
-      allDay: !event.startTime
-    };
-    this.calendar.addEvent(newFCEvent);
-    this.updateUpcomingEvents();
-  },
+  handleEventClick(info) {
+    const id = info.event.id;
 
-  updateSidePanel(dateStr) {
-    const selectedDiv = document.getElementById('selectedEvent');
-    const dayEvents = this.Storage.events.filter(e => e.date === dateStr);
-
-    if (dayEvents.length === 0) {
-      selectedDiv.innerHTML = `<p>No events for ${dateStr}</p>`;
-      return;
+    if (confirm("Would you like to edit this event?")) {
+      const newTitle = prompt("Enter new event title:", info.event.title);
+      const newDate = prompt("Enter new date (YYYY-MM-DD):", info.event.startStr.split('T')[0]);
+      if (newTitle && newDate) {
+        this.Storage.updateEvent(id, { title: newTitle, date: newDate });
+        info.event.setProp('title', newTitle);
+        info.event.setStart(newDate);
+        alert("Event updated.");
+      }
     }
 
-    selectedDiv.innerHTML = `<h3>${dateStr}</h3>`;
-    dayEvents.forEach(e => {
-      const time = e.startTime ? ` (${e.startTime}${e.endTime ? `-${e.endTime}` : ''})` : '';
-      const fileLink = e.fileName ? `<a href="#" class="download-link" onclick="Calendar.downloadFile('${e.fileName}')">[Download]</a>` : '';
-      selectedDiv.innerHTML += `<p>${e.title}${time} ${fileLink}</p>`;
-    });
-  },
+    if (confirm("Would you like to delete this event?")) {
+      this.Storage.deleteEvent(id);
+      info.event.remove();
+      alert("Event deleted.");
+    }
 
-  async downloadFile(name) {
-    const file = await this.Storage.getFile(name);
-    const url = URL.createObjectURL(file);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = name;
-    a.click();
-    URL.revokeObjectURL(url);
+    this.updateUpcomingEvents();
   },
 
   updateUpcomingEvents() {
     const upcomingDiv = document.getElementById('upcomingEvents');
     upcomingDiv.innerHTML = '';
-    const sorted = [...this.Storage.events].sort((a,b)=> new Date(a.date+'T'+(a.startTime||'00:00'))-new Date(b.date+'T'+(b.startTime||'00:00')));
+    const sorted = [...this.Storage.events].sort((a,b)=> new Date(a.date)-new Date(b.date));
 
     sorted.forEach(e => {
       const time = e.startTime ? ` (${e.startTime}${e.endTime ? `-${e.endTime}`:''})` : '';
@@ -104,9 +84,10 @@ export const Calendar = {
   },
 
   refresh() {
-    this.Storage.loadFromLocal();
-    this.calendar.removeAllEvents();
-    this.calendar.addEventSource(this.generateEvents());
-    this.updateUpcomingEvents();
+    this.Storage.loadEvents().then(() => {
+      this.calendar.removeAllEvents();
+      this.calendar.addEventSource(this.generateEvents());
+      this.updateUpcomingEvents();
+    });
   }
 };

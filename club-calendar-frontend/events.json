@@ -1,0 +1,16 @@
+[
+  {
+    "title": "Sunday Ride",
+    "start": "2025-08-10T09:00:00",
+    "end": "2025-08-10T12:00:00",
+    "location": "Phoenix, AZ",
+    "description": "Meet at 9 AM at the clubhouse for our weekend ride."
+  },
+  {
+    "title": "Charity Bike Wash",
+    "start": "2025-08-15T10:00:00",
+    "end": "2025-08-15T15:00:00",
+    "location": "Main Street Garage",
+    "description": "Support our local charity with a fun bike wash event."
+  }
+]

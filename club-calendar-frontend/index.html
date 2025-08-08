@@ -4,64 +4,45 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>One1Luv Calendar</title> <!-- ✅ Browser tab title -->
+  <title>One1LuvMCPhoenix</title>
 
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
-
-  <!-- Local CSS (make sure style.css is in the same folder as index.html) -->
-  <link rel="stylesheet" href="./style.css">
-  <script type="module">
-    import { Storage } from './storage.js';
-    import { UI } from './ui.js';
-    import { Calendar } from './calendar.js';
-
-    // Initialize Calendar Module with Storage and UI
-    Calendar.init(Storage, UI);
-
-  </script>
+  <!-- Local CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <h1>📅 One1Luv Calendar</h1> <!-- ✅ Page header title -->
+  <header>
+    <h1>One1LuvMCPhoenix </h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="sponsors.html">Sponsors & Charities</a></li>
+        <li><a href="store.html">Store</a></li>
+        <li><a href="events.html" target="_blank">Events</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <div id="mainContainer">
-    <!-- Left: Calendar -->
-    <div id="calendar"></div>
+  <section class="hero">
+    <h2>One Love for All Riders</h2>
+    <p>Representing unity and the thrill of the ride for bikers across the globe.</p>
+    <img src="images/The crew.jpg" alt="Big Wheel Bagger Motorcycle" class="hero-img">
+  </section>
 
-    <!-- Right: Event Details Panel -->
-    <div id="eventDetails">
-      <h2>Day Details</h2>
-      <div id="selectedEvent">
-        <p>Double‑click a date to add an event or upload a file.</p>
-      </div>
-
-      <h2>Upcoming Events</h2>
-      <div id="upcomingEvents"></div>
-    </div>
-  </div>
-
-  <!-- Modal for Adding Event or File -->
-  <div id="eventModal">
-    <div class="modal-content">
-      <h3>Add Event or File</h3>
-      <input type="text" id="eventTitle" placeholder="Event Title (optional if uploading only file)" />
-      <label>Start Time:</label><br>
-      <input type="time" id="eventStartTime"><br><br>
-      <label>End Time:</label><br>
-      <input type="time" id="eventEndTime"><br><br>
-      <label>Attach file:</label><br>
-      <input type="file" id="eventFile" /><br><br>
-      <button onclick="saveEvent()">Save</button>
-      <button onclick="closeModal()">Cancel</button>
-    </div>
-  </div>
-
-  <!-- FullCalendar JS -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-
-  <!-- Local JS -->
-  <script src="./script.js"></script>
+  <section class="welcome">
+    <h2>Welcome to Our Club</h2>
+    <p>We ride together, we live free, and we embrace all motorcycle cultures.</p>
+    <p>He's my brother. He Ain't Heavy.</p>
+    <img src="images/HEAINTHEAVYblackandwhitefile.jpg" alt="Graffiti Art" class="graffiti">
+    <p>Art work by Gilbert Young.</p>
+  </section>
+    
+  <footer>
+    <p>&copy; 2025 One1LuvMCPhoenix. All Rights Reserved.</p>
+  </footer>
 </body>
 
 </html>

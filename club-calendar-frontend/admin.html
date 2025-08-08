@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - One1Luv Events</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    main { max-width: 600px; margin: auto; padding: 20px; }
+    input, textarea { width: 100%; margin-bottom: 10px; padding: 8px; }
+    button { padding: 8px 12px; margin-right: 10px; cursor: pointer; }
+    table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #f0f0f0; }
+  </style>
+</head>
+<body>
+  <div id="header"></div>
+
+  <main>
+    <h1>Admin - Manage Events</h1>
+
+    <form id="eventForm">
+      <input type="hidden" id="editIndex">
+      <label>Title:</label>
+      <input type="text" id="title" required>
+      <label>Start Date/Time:</label>
+      <input type="datetime-local" id="start" required>
+      <label>End Date/Time:</label>
+      <input type="datetime-local" id="end" required>
+      <label>Location:</label>
+      <input type="text" id="location">
+      <label>Description:</label>
+      <textarea id="description"></textarea>
+      <button type="submit">Save Event</button>
+      <button type="button" onclick="clearForm()">Clear</button>
+    </form>
+
+    <table id="eventsTable">
+      <thead>
+        <tr><th>Title</th><th>Start</th><th>End</th><th>Actions</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="load-header-footer.js"></script>
+  <script>
+    let events = JSON.parse(localStorage.getItem('events')) || [];
+
+    function renderTable() {
+      const tbody = document.querySelector('#eventsTable tbody');
+      tbody.innerHTML = '';
+      events.forEach((event, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${event.title}</td>
+          <td>${new Date(event.start).toLocaleString()}</td>
+          <td>${new Date(event.end).toLocaleString()}</td>
+          <td>
+            <button onclick="editEvent(${index})">Edit</button>
+            <button onclick="deleteEvent(${index})">Delete</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      localStorage.setItem('events', JSON.stringify(events));
+      downloadJSON(); // Updates events.json
+    }
+
+    function downloadJSON() {
+      const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'events.json';
+      a.click();
+    }
+
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const index = document.getElementById('editIndex').value;
+      const eventData = {
+        title: document.getElementById('title').value,
+        start: document.getElementById('start').value,
+        end: document.getElementById('end').value,
+        location: document.getElementById('location').value,
+        description: document.getElementById('description').value
+      };
+      if (index) {
+        events[index] = eventData;
+      } else {
+        events.push(eventData);
+      }
+      clearForm();
+      renderTable();
+    });
+
+    function clearForm() {
+      document.getElementById('editIndex').value = '';
+      document.getElementById('eventForm').reset();
+    }
+
+    function editEvent(index) {
+      const event = events[index];
+      document.getElementById('editIndex').value = index;
+      document.getElementById('title').value = event.title;
+      document.getElementById('start').value = event.start;
+      document.getElementById('end').value = event.end;
+      document.getElementById('location').value = event.location;
+      document.getElementById('description').value = event.description;
+    }
+
+    function deleteEvent(index) {
+      if (confirm('Delete this event?')) {
+        events.splice(index, 1);
+        renderTable();
+      }
+    }
+
+    renderTable();
+  </script>
+</body>
+</html>

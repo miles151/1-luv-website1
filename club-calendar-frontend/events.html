@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One1LuvMCPhoenix - Events</title>
+<!-- Styles and CDN links (keep as is) -->
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css" rel="stylesheet">
+
+  <!-- 
+    DOCSTRING: events.html
+    - Displays the club events calendar
+    - Loads reusable header and footer dynamically
+    - FullCalendar shows events from local JSON
+    - Backend (Phase 1) uses JSON instead of a database
+  -->
+
+  <!-- ===== Enhanced Styles ===== -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- ===== FullCalendar CDN (CSS first) ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <!-- Reusable Header -->
+  <div id="header"></div>
+
+  <!-- Page Title -->
+  <h1 class="page-title">One1Luv Club Events</h1>
+
+  <!-- Calendar Container -->
+  <div id="calendar" style="max-width: 900px; margin: 40px auto;"></div>
+
+  <!-- Reusable Footer -->
+  <div id="footer"></div>
+
+  <!-- ===== FullCalendar CDN JS ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js"></script>
+
+  <!-- ===== Custom Script for Loading Header/Footer ===== -->
+  <script src="load-header-footer.js"></script>
+
+  <!-- ===== Calendar Initialization Script ===== -->
+  <script>
+    /**
+     * DOCSTRING: Calendar Initialization
+     * - Initializes FullCalendar
+     * - Loads events from events.json (Phase 1 JSON backend)
+     */
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: 'events.json', // Loads events from local JSON file
+        eventClick: function(info) {
+          alert('Event: ' + info.event.title);
+        }
+      });
+      calendar.render();
+    });
+  </script>
+</body>
+</html>
