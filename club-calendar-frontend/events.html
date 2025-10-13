@@ -3,64 +3,338 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>One1LuvMCPhoenix - Events</title>
-<!-- Styles and CDN links (keep as is) -->
-  <link rel="stylesheet" href="styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css" rel="stylesheet">
-
+  <title>Services - One1LuvMCPhoenix</title>
+  <link rel="stylesheet" href="style.css">
   <!-- 
-    DOCSTRING: events.html
-    - Displays the club events calendar
-    - Loads reusable header and footer dynamically
-    - FullCalendar shows events from local JSON
-    - Backend (Phase 1) uses JSON instead of a database
+    DOCSTRING: services.html
+    Purpose:
+      - Displays services offered by the motorcycle club
+      - Includes rides, events, and member support
+      - Reuses global header and footer
   -->
-
-  <!-- ===== Enhanced Styles ===== -->
-  <link rel="stylesheet" href="styles.css">
-
-  <!-- ===== FullCalendar CDN (CSS first) ===== -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.css" rel="stylesheet">
-
 </head>
 <body>
 
-  <!-- Reusable Header -->
-  <div id="header"></div>
+<header>
+  <h1>One1LuvMCPhoenix</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Us</a></li>
+      <li><a href="services.html" class="active">Services</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="sponsors.html">Sponsors & Charities</a></li>
+      <li><a href="store.html">Store</a></li>
+      <li><a href="events.html">Events</a></li>
+    </ul>
+  </nav>
+</header>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>One1Luv iOS‑style FullCalendar</title>
+  <!-- FullCalendar v6.x CDN (remove if you already bundle it) -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
-  <!-- Page Title -->
-  <h1 class="page-title">One1Luv Club Events</h1>
+  <style>
+    /* =====================
+       ONE1LUV THEME PALETTE
+       ===================== */
+    :root{
+      --ol-bg: #0b0d12;          /* deep black/blue */
+      --ol-surface: #0f1218;     /* card background */
+      --ol-fg: #e8ecf2;          /* main text */
+      --ol-muted: #98a3b6;       /* "fluorescent gray" vibe */
+      --ol-blue: #1e90ff;        /* One1Luv blue */
+      --ol-blue-2: #69b6ff;      /* lighter blue */
+      --ol-grid: #232834;        /* grid lines */
+      --ol-chip: #151a22;        /* chips/pills */
+      --ol-shadow: 0 10px 30px rgba(0,0,0,.45);
+      --ol-danger: #ff4d4f;      /* today badge alt */
+    }
 
-  <!-- Calendar Container -->
-  <div id="calendar" style="max-width: 900px; margin: 40px auto;"></div>
+    body{background:var(--ol-bg);color:var(--ol-fg);font:16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif;}
 
-  <!-- Reusable Footer -->
-  <div id="footer"></div>
+    .ol-wrap{max-width:1100px;margin:24px auto;padding:0 16px}
 
-  <!-- ===== FullCalendar CDN JS ===== -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/main.min.js"></script>
+    /* ===== FullCalendar header (iOS-like) ===== */
+    .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px 0}
+    .fc .fc-toolbar-title{font-size:28px;font-weight:800;letter-spacing:.3px}
+    .fc .fc-toolbar-title::first-letter{letter-spacing:0}
+    .fc .fc-button{border:none;background:var(--ol-chip);color:var(--ol-fg);box-shadow:var(--ol-shadow);border-radius:14px;padding:8px 12px}
+    .fc .fc-button:hover{filter:brightness(1.05)}
+    .fc .fc-button-primary:disabled{opacity:.6}
 
-  <!-- ===== Custom Script for Loading Header/Footer ===== -->
-  <script src="load-header-footer.js"></script>
+    /* ===== Month grid ===== */
+    .fc .fc-scrollgrid{border:1px solid var(--ol-grid);border-radius:16px;overflow:hidden;box-shadow:var(--ol-shadow);}
+    .fc-theme-standard .fc-scrollgrid{border-color:var(--ol-grid)}
+    .fc-theme-standard td, .fc-theme-standard th{border-color:var(--ol-grid)}
 
-  <!-- ===== Calendar Initialization Script ===== -->
+    /* Day of week strip */
+    .fc .fc-col-header-cell-cushion{color:var(--ol-muted);font-weight:600;padding:10px 0}
+
+    /* Day number as iOS-style badge */
+    .fc .fc-daygrid-day-top{justify-content:flex-start;padding:6px}
+    .fc .fc-daygrid-day-number{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;font-weight:700;color:var(--ol-fg);text-decoration:none}
+
+    /* Outside days muted */
+    .fc .fc-day-other .fc-daygrid-day-number{color:var(--ol-muted)}
+
+    /* Today badge (blue ring) */
+    .fc .fc-day-today .fc-daygrid-day-number{outline:2px solid var(--ol-blue);outline-offset:2px}
+
+    /* Selected day badge (filled blue) */
+    .fc .ol-selected .fc-daygrid-day-number{background:var(--ol-blue);color:#fff}
+
+    /* Event dots under the date (iOS feel) */
+    .fc .ol-dotrow{display:flex;gap:4px;position:absolute;left:6px;bottom:6px}
+    .fc .ol-dot{width:6px;height:6px;border-radius:999px;background:var(--ol-blue);opacity:.9}
+
+    /* Event pill in month grid */
+    .fc .fc-daygrid-dot-event .fc-event-title{color:var(--ol-fg)}
+    .fc .fc-daygrid-event{background:transparent;border:none}
+    .fc .fc-event .fc-event-main{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:10px;padding:2px 6px}
+
+    /* Agenda (day list) beneath calendar */
+    .ol-agenda{margin-top:14px;background:var(--ol-surface);border:1px solid var(--ol-grid);border-radius:16px;padding:10px 12px;box-shadow:var(--ol-shadow)}
+    .ol-agenda h3{margin:2px 0 8px 0;font-size:14px;color:var(--ol-muted);font-weight:700}
+    .ol-event{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;gap:10px;align-items:center}
+    .ol-event-time{font-variant-numeric:tabular-nums;color:var(--ol-muted);min-width:64px}
+    .ol-event-title{font-weight:700}
+
+    /* Quick Add (floating button) */
+    .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border-radius:999px;border:none;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
+    .ol-fab:active{transform:translateY(1px)}
+
+    dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(520px,92vw)}
+    dialog::backdrop{background:rgba(0,0,0,.35)}
+    form.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+    form.row label{display:flex;flex-direction:column;font-size:13px;color:var(--ol-muted);gap:6px}
+    form.row input, form.row textarea{border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;background:var(--ol-bg);color:var(--ol-fg)}
+    .actions{display:flex;justify-content:flex-end;gap:8px;padding:0 14px 14px}
+    .actions button{border:1px solid var(--ol-grid);background:var(--ol-chip);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--ol-fg)}
+    .actions .primary{background:var(--ol-blue);border-color:transparent}
+
+    @media (max-width:640px){
+      .fc .fc-toolbar-title{font-size:22px}
+      .fc .fc-daygrid-day-number{width:28px;height:28px}
+      .ol-event{flex-direction:column;align-items:flex-start}
+      .ol-event-time{min-width:unset}
+      form.row{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="ol-wrap">
+    <div id="olCalendar"></div>
+
+    <!-- Day agenda list -->
+    <div class="ol-agenda" id="olAgenda">
+      <h3 id="olAgendaTitle">Today</h3>
+      <div id="olAgendaList"></div>
+    </div>
+  </div>
+
+  <!-- Quick add dialog + FAB -->
+  <button class="ol-fab" id="olAddBtn" title="Add event">＋</button>
+  <dialog id="olDialog">
+    <form method="dialog" class="row" id="olForm">
+      <label>Date
+        <input type="date" id="olDate" required />
+      </label>
+      <label>Time (optional)
+        <input type="time" id="olTime" />
+      </label>
+      <label style="grid-column:1/-1">Title
+        <input type="text" id="olTitle" placeholder="Event title" required />
+      </label>
+      <label style="grid-column:1/-1">Notes (optional)
+        <textarea id="olNotes" rows="3" placeholder="Add notes..."></textarea>
+      </label>
+    </form>
+    <div class="actions">
+      <button id="olCancel">Cancel</button>
+      <button class="primary" id="olSave">Save</button>
+    </div>
+  </dialog>
+
   <script>
-    /**
-     * DOCSTRING: Calendar Initialization
-     * - Initializes FullCalendar
-     * - Loads events from events.json (Phase 1 JSON backend)
-     */
-    document.addEventListener('DOMContentLoaded', function () {
-      const calendarEl = document.getElementById('calendar');
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: 'events.json', // Loads events from local JSON file
-        eventClick: function(info) {
-          alert('Event: ' + info.event.title);
+    (function(){
+      const CAL_KEY = 'ol_fullcalendar_events_v1';
+      const readStore = () => { try{return JSON.parse(localStorage.getItem(CAL_KEY))||[];}catch{return []} };
+      const writeStore = (arr) => localStorage.setItem(CAL_KEY, JSON.stringify(arr));
+
+      // Seed examples if empty (remove in production)
+      if(readStore().length===0){
+        const today = new Date();
+        const iso = today.toISOString().slice(0,10);
+        writeStore([
+          { id: 'seed1', title: 'Bike Night', start: iso + 'T19:00:00' },
+          { id: 'seed2', title: 'Pay Dues', start: iso },
+          { id: 'seed3', title: 'Charity Ride Check-in', start: iso, description: 'Meet at clubhouse' }
+        ]);
+      }
+
+      const calendarEl = document.getElementById('olCalendar');
+      const agendaTitle = document.getElementById('olAgendaTitle');
+      const agendaList = document.getElementById('olAgendaList');
+
+      let selectedDate = new Date();
+
+      function formatDayTitle(d){
+        const now = new Date();
+        const same = d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
+        return same ? 'Today' : new Intl.DateTimeFormat(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'}).format(d);
+      }
+
+      function renderAgenda(date, events){
+        agendaTitle.textContent = formatDayTitle(date);
+        agendaList.innerHTML = '';
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth()+1).padStart(2,'0');
+        const dd = String(date.getDate()).padStart(2,'0');
+        const dayISO = `${yyyy}-${mm}-${dd}`;
+        const list = events
+          .filter(ev => (ev.startStr||'').slice(0,10)===dayISO)
+          .sort((a,b)=> (a.startStr||'').localeCompare(b.startStr||''));
+        if(list.length===0){
+          const el = document.createElement('div'); el.className='ol-event'; el.innerHTML='<div class="ol-event-time">—</div><div class="ol-event-title">No events</div>';
+          agendaList.appendChild(el); return;
         }
+        for(const ev of list){
+          const row = document.createElement('div'); row.className='ol-event';
+          const tm = document.createElement('div'); tm.className='ol-event-time';
+          tm.textContent = ev.start ? new Date(ev.start).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
+          const box = document.createElement('div');
+          const ttl = document.createElement('div'); ttl.className='ol-event-title'; ttl.textContent = ev.title || '(untitled)';
+          box.appendChild(ttl);
+          if(ev.extendedProps && ev.extendedProps.description){
+            const notes = document.createElement('div'); notes.style.color='var(--ol-muted)'; notes.textContent = ev.extendedProps.description; box.appendChild(notes);
+          }
+          row.appendChild(tm); row.appendChild(box); agendaList.appendChild(row);
+        }
+      }
+
+      // Build FullCalendar
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        height: 'auto',
+        initialView: 'dayGridMonth',
+        fixedWeekCount: true,
+        headerToolbar: {
+          left: 'prev,today,next',
+          center: 'title',
+          right: ''
+        },
+        dayMaxEventRows: 3,
+        events: readStore(),
+        datesSet(info){
+          // update dots for each cell after render
+          queueMicrotask(addDotRows);
+        },
+        eventDidMount(){ queueMicrotask(addDotRows); },
+        dateClick(info){
+          // Toggle selected class on cells
+          document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
+          info.dayEl.classList.add('ol-selected');
+          selectedDate = info.date;
+          renderAgenda(selectedDate, calendar.getEvents());
+        },
+        eventAdd(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
+        eventChange(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
+        eventRemove(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
       });
+
       calendar.render();
-    });
+
+      // Select today on load
+      const todayCell = calendarEl.querySelector('.fc-day-today');
+      if(todayCell){ todayCell.classList.add('ol-selected'); }
+      renderAgenda(selectedDate, calendar.getEvents());
+
+      // Add small dot rows under dates (max 3)
+      function addDotRows(){
+        calendarEl.querySelectorAll('.fc-daygrid-day').forEach(td=>{
+          // Remove previous
+          const old = td.querySelector('.ol-dotrow'); if(old) old.remove();
+          const dateStr = td.getAttribute('data-date');
+          const count = calendar.getEvents().filter(ev => (ev.startStr||'').slice(0,10)===dateStr).length;
+          const n = Math.min(3, count);
+          if(n>0){
+            const row = document.createElement('div'); row.className='ol-dotrow';
+            for(let i=0;i<n;i++){ const dot=document.createElement('div'); dot.className='ol-dot'; row.appendChild(dot); }
+            td.style.position='relative';
+            td.appendChild(row);
+          }
+        });
+      }
+
+      function persistEvents(){
+        const payload = calendar.getEvents().map(ev => ({
+          id: ev.id,
+          title: ev.title,
+          start: ev.startStr,
+          end: ev.endStr || undefined,
+          description: ev.extendedProps && ev.extendedProps.description || undefined
+        }));
+        writeStore(payload);
+      }
+
+      // ===== Quick Add dialog =====
+      const addBtn = document.getElementById('olAddBtn');
+      const dlg = document.getElementById('olDialog');
+      const olDate = document.getElementById('olDate');
+      const olTime = document.getElementById('olTime');
+      const olTitle = document.getElementById('olTitle');
+      const olNotes = document.getElementById('olNotes');
+      const olCancel = document.getElementById('olCancel');
+      const olSave = document.getElementById('olSave');
+
+      function toISODate(d){ return d.toISOString().slice(0,10); }
+
+      addBtn.addEventListener('click', ()=>{
+        olDate.value = toISODate(selectedDate);
+        olTime.value = '';
+        olTitle.value='';
+        olNotes.value='';
+        dlg.showModal();
+      });
+      olCancel.addEventListener('click', ()=> dlg.close());
+      olSave.addEventListener('click', ()=>{
+        const date = olDate.value;
+        const title = olTitle.value.trim();
+        const time = olTime.value;
+        const notes = olNotes.value.trim();
+        if(!date || !title) return;
+        const start = time ? `${date}T${time}:00` : date;
+        calendar.addEvent({ title, start, extendedProps: { description: notes }});
+        dlg.close();
+        // jump to that month and refresh selection
+        calendar.gotoDate(date);
+        selectedDate = new Date(date + 'T00:00:00');
+        document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
+        const target = calendarEl.querySelector(`.fc-daygrid-day[data-date="${date}"]`);
+        if(target){ target.classList.add('ol-selected'); }
+        renderAgenda(selectedDate, calendar.getEvents());
+      });
+
+      // Public helpers to integrate with your site scripts
+      window.One1LuvCalendar = {
+        add: function(list){
+          for(const e of (list||[])){
+            if(!e || !e.title || !e.start) continue;
+            calendar.addEvent(e);
+          }
+        },
+        clear: function(){ calendar.getEvents().forEach(ev => ev.remove()); },
+        getAll: function(){ return calendar.getEvents().map(e=>({id:e.id,title:e.title,start:e.startStr,end:e.endStr,description:e.extendedProps && e.extendedProps.description}))}
+      };
+    })();
   </script>
+
+<footer>
+  &copy;                2025 One1LuvMCPhoenix. All rights reserved.
+</footer>
+
 </body>
 </html>
