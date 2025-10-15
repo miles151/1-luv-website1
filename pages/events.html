@@ -1,39 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Services - One1LuvMCPhoenix</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- 
-    DOCSTRING: /pages/services.html
-    Purpose:
-      - Displays services offered by the motorcycle club
-      - Includes rides, events, and member support
-      - Reuses global header and footer
-  -->
-</head>
-<body>
-
-<header>
-  <h1>One1LuvMCPhoenix</h1>
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="/pages/about.html">About Us</a></li>
-      <li><a href="/pages/services.html" class="active">Services</a></li>
-      <li><a href="/pages/gallery.html">Gallery</a></li>
-      <li><a href="/pages/sponsors.html">Sponsors & Charities</a></li>
-      <li><a href="/pages/store.html">Store</a></li>
-      <li><a href="/pages/events.html">Events</a></li>
-    </ul>
-  </nav>
-</header>
-<head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>One1Luv iOS‑style FullCalendar</title>
-  <!-- FullCalendar v6.x CDN (remove if you already bundle it) -->
+  <title>Events - One1LuvMCPhoenix</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- FullCalendar v6.x CDN -->
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
@@ -51,12 +24,25 @@
       --ol-grid: #232834;        /* grid lines */
       --ol-chip: #151a22;        /* chips/pills */
       --ol-shadow: 0 10px 30px rgba(0,0,0,.45);
-      --ol-danger: #ff4d4f;      /* today badge alt */
+      --ol-danger: #ff4d4f;      /* alert */
+      --ol-ok: #22c55e;
     }
 
-    body{background:var(--ol-bg);color:var(--ol-fg);font:16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif;}
+    body{background:var(--ol-bg);color:var(--ol-fg);font:16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif;margin:0}
 
-    .ol-wrap{max-width:1100px;margin:24px auto;padding:0 16px}
+    header{background:transparent;padding:12px 16px}
+    header h1{margin:0;color:var(--ol-blue)}
+    nav ul{list-style:none;margin:8px 0 0 0;padding:0;display:flex;gap:10px;flex-wrap:wrap}
+    nav a{color:var(--ol-muted);text-decoration:none;padding:6px 10px;border-radius:10px}
+    nav a.active, nav a:hover{background:var(--ol-chip);color:var(--ol-fg)}
+
+    .ol-wrap{max-width:1100px;margin:16px auto 40px;padding:0 16px}
+
+    /* ===== Auth buttons row ===== */
+    .ol-authbar{display:flex;justify-content:flex-end;gap:8px;margin:8px 0 12px 0}
+    .btn{border:1px solid var(--ol-grid);background:var(--ol-chip);color:var(--ol-fg);padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:var(--ol-shadow)}
+    .btn.primary{background:var(--ol-blue);border-color:transparent;color:#fff}
+    .btn.warn{background:#1b1b1b;color:#fff;border-color:#333}
 
     /* ===== FullCalendar header (iOS-like) ===== */
     .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px 0}
@@ -91,11 +77,6 @@
     .fc .ol-dotrow{display:flex;gap:4px;position:absolute;left:6px;bottom:6px}
     .fc .ol-dot{width:6px;height:6px;border-radius:999px;background:var(--ol-blue);opacity:.9}
 
-    /* Event pill in month grid */
-    .fc .fc-daygrid-dot-event .fc-event-title{color:var(--ol-fg)}
-    .fc .fc-daygrid-event{background:transparent;border:none}
-    .fc .fc-event .fc-event-main{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:10px;padding:2px 6px}
-
     /* Agenda (day list) beneath calendar */
     .ol-agenda{margin-top:14px;background:var(--ol-surface);border:1px solid var(--ol-grid);border-radius:16px;padding:10px 12px;box-shadow:var(--ol-shadow)}
     .ol-agenda h3{margin:2px 0 8px 0;font-size:14px;color:var(--ol-muted);font-weight:700}
@@ -106,7 +87,9 @@
     /* Quick Add (floating button) */
     .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border-radius:999px;border:none;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .ol-fab:active{transform:translateY(1px)}
+    .ol-fab[disabled]{opacity:.55;cursor:not-allowed;filter:grayscale(40%)}
 
+    /* Dialogs */
     dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(520px,92vw)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     form.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
@@ -115,6 +98,8 @@
     .actions{display:flex;justify-content:flex-end;gap:8px;padding:0 14px 14px}
     .actions button{border:1px solid var(--ol-grid);background:var(--ol-chip);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--ol-fg)}
     .actions .primary{background:var(--ol-blue);border-color:transparent}
+
+    .note{font-size:.9rem;color:var(--ol-muted);margin:6px 0 0 0}
 
     @media (max-width:640px){
       .fc .fc-toolbar-title{font-size:22px}
@@ -126,7 +111,31 @@
   </style>
 </head>
 <body>
-  <div class="ol-wrap">
+
+  <!-- Optional site header (remove if you inject a global header) -->
+  <header>
+    <h1>One1LuvMCPhoenix</h1>
+    <nav>
+      <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/pages/about.html">About Us</a></li>
+        <li><a href="/pages/services.html">Services</a></li>
+        <li><a href="/pages/gallery.html">Gallery</a></li>
+        <li><a href="/pages/sponsors.html">Sponsors & Charities</a></li>
+        <li><a href="/pages/store.html">Store</a></li>
+        <li><a href="/pages/events.html" class="active">Events</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="ol-wrap">
+    <!-- Auth bar: Login / Logout + status -->
+    <div class="ol-authbar">
+      <span id="olAuthStatus" class="note" style="margin-right:auto">Read-only. Login to add/edit events.</span>
+      <button id="olLoginBtn" class="btn primary">Login</button>
+      <button id="olLogoutBtn" class="btn warn" style="display:none">Logout</button>
+    </div>
+
     <div id="olCalendar"></div>
 
     <!-- Day agenda list -->
@@ -134,10 +143,11 @@
       <h3 id="olAgendaTitle">Today</h3>
       <div id="olAgendaList"></div>
     </div>
-  </div>
+  </main>
 
-  <!-- Quick add dialog + FAB -->
-  <button class="ol-fab" id="olAddBtn" title="Add event">＋</button>
+  <!-- Quick add dialog + FAB (disabled until login) -->
+  <button class="ol-fab" id="olAddBtn" title="Add event" disabled>＋</button>
+
   <dialog id="olDialog">
     <form method="dialog" class="row" id="olForm">
       <label>Date
@@ -159,7 +169,135 @@
     </div>
   </dialog>
 
+  <!-- Login dialog -->
+  <dialog id="olLoginDialog">
+    <form method="dialog" class="row" id="olLoginForm" style="grid-template-columns:1fr">
+      <div style="padding:0 14px">
+        <h3 style="margin:6px 0 4px 0;color:var(--ol-blue)">Members Login</h3>
+        <p class="note" style="margin:0">Enter passcode to enable editing.</p>
+      </div>
+      <label>Passcode
+        <input type="password" id="olPass" placeholder="••••••" autocomplete="current-password" required />
+      </label>
+      <div class="note" id="olLoginMsg" style="color:var(--ol-danger);display:none">Incorrect passcode.</div>
+    </form>
+    <div class="actions">
+      <button id="olLoginCancel">Cancel</button>
+      <button class="primary" id="olLoginGo">Unlock</button>
+    </div>
+  </dialog>
+
+  <footer style="padding:24px 16px;color:var(--ol-muted);text-align:center">
+    &copy; 2025 One1LuvMCPhoenix. All rights reserved.
+  </footer>
+
   <script>
+    /* ===========================
+       LIGHTWEIGHT AUTH (Option 1)
+       Passcode: 1LFF1L  (stored as SHA-1 hash for light obscurity)
+       =========================== */
+
+    // SHA-1("1LFF1L") = 48aafb42add3af0524d8c9b54c8ec644aa0d30de
+    const OL_HASHED = "48aafb42add3af0524d8c9b54c8ec644aa0d30de";
+    const OL_AUTH_KEY = "one1luv_auth";
+    const OL_EXP_KEY  = "one1luv_exp";
+
+    // Minimal SHA-1 (string -> hex). Not cryptographically strong in JS environments; fine for this light gate.
+    function sha1(str){
+      function rotl(n,s){return (n<<s)|(n>>> (32-s));}
+      function toBytes(s){
+        const out=[]; for(let i=0;i<s.length;i++){
+          const c=s.charCodeAt(i);
+          if(c<128) out.push(c);
+          else if(c<2048){ out.push((c>>6)|192,(c&63)|128); }
+          else { out.push((c>>12)|224, ((c>>6)&63)|128, (c&63)|128); }
+        }
+        return out;
+      }
+      const msg=toBytes(str);
+      const l=msg.length;
+      msg.push(0x80);
+      while((msg.length%64)!==56) msg.push(0);
+      const bitLen=l*8;
+      for(let i=7;i>=0;i--) msg.push((bitLen>>> (i*8))&255);
+      const words=new Array(80);
+      let h0=0x67452301, h1=0xEFCDAB89, h2=0x98BADCFE, h3=0x10325476, h4=0xC3D2E1F0;
+      for(let i=0;i<msg.length;i+=64){
+        for(let j=0;j<16;j++){
+          const k=i+j*4;
+          words[j]= (msg[k]<<24) | (msg[k+1]<<16) | (msg[k+2]<<8) | (msg[k+3]);
+        }
+        for(let j=16;j<80;j++) words[j]=rotl(words[j-3]^words[j-8]^words[j-14]^words[j-16],1);
+        let a=h0,b=h1,c=h2,d=h3,e=h4;
+        for(let j=0;j<80;j++){
+          let f,k;
+          if(j<20){ f=(b&c)|((~b)&d); k=0x5A827999; }
+          else if(j<40){ f=b^c^d; k=0x6ED9EBA1; }
+          else if(j<60){ f=(b&c)|(b&d)|(c&d); k=0x8F1BBCDC; }
+          else { f=b^c^d; k=0xCA62C1D6; }
+          const temp=(rotl(a,5)+f+e+k+(words[j]>>>0))>>>0;
+          e=d; d=c; c=rotl(b,30)>>>0; b=a; a=temp;
+        }
+        h0=(h0+a)>>>0; h1=(h1+b)>>>0; h2=(h2+c)>>>0; h3=(h3+d)>>>0; h4=(h4+e)>>>0;
+      }
+      function hex(n){ return ("00000000"+n.toString(16)).slice(-8); }
+      return hex(h0)+hex(h1)+hex(h2)+hex(h3)+hex(h4);
+    }
+
+    function setAuth(minutes=60){
+      sessionStorage.setItem(OL_AUTH_KEY,"ok");
+      sessionStorage.setItem(OL_EXP_KEY, String(Date.now()+minutes*60*1000));
+      syncAuthUI();
+    }
+    function clearAuth(){
+      sessionStorage.removeItem(OL_AUTH_KEY);
+      sessionStorage.removeItem(OL_EXP_KEY);
+      syncAuthUI();
+    }
+    function isAuthed(){
+      const ok = sessionStorage.getItem(OL_AUTH_KEY)==="ok";
+      const exp = parseInt(sessionStorage.getItem(OL_EXP_KEY)||"0",10);
+      if(!ok || Date.now()>exp){ clearAuth(); return false; }
+      return true;
+    }
+
+    // ====== UI: Login / Logout / Status ======
+    const loginBtn = document.getElementById("olLoginBtn");
+    const logoutBtn = document.getElementById("olLogoutBtn");
+    const authStatus = document.getElementById("olAuthStatus");
+    const addBtn = document.getElementById("olAddBtn");
+
+    const loginDlg = document.getElementById("olLoginDialog");
+    const passInput = document.getElementById("olPass");
+    const loginMsg = document.getElementById("olLoginMsg");
+    const loginGo = document.getElementById("olLoginGo");
+    const loginCancel = document.getElementById("olLoginCancel");
+
+    loginBtn.addEventListener("click", ()=>{ loginMsg.style.display="none"; passInput.value=""; loginDlg.showModal(); passInput.focus(); });
+    loginCancel.addEventListener("click", ()=> loginDlg.close());
+    loginGo.addEventListener("click", ()=>{
+      const val = passInput.value.trim();
+      if(!val) return;
+      if(sha1(val)===OL_HASHED){
+        setAuth(60); // 60 minute edit window
+        loginDlg.close();
+      } else {
+        loginMsg.style.display="block";
+      }
+    });
+
+    logoutBtn.addEventListener("click", ()=> clearAuth());
+
+    function syncAuthUI(){
+      const yes = isAuthed();
+      addBtn.disabled = !yes;
+      loginBtn.style.display = yes ? "none" : "inline-block";
+      logoutBtn.style.display = yes ? "inline-block" : "none";
+      authStatus.textContent = yes ? "Editing enabled." : "Read-only. Login to add/edit events.";
+      authStatus.style.color = yes ? "var(--ol-ok)" : "var(--ol-muted)";
+    }
+
+    // =============== Calendar + Agenda ===============
     (function(){
       const CAL_KEY = 'ol_fullcalendar_events_v1';
       const readStore = () => { try{return JSON.parse(localStorage.getItem(CAL_KEY))||[];}catch{return []} };
@@ -228,21 +366,17 @@
         },
         dayMaxEventRows: 3,
         events: readStore(),
-        datesSet(info){
-          // update dots for each cell after render
-          queueMicrotask(addDotRows);
-        },
+        datesSet(){ queueMicrotask(addDotRows); },
         eventDidMount(){ queueMicrotask(addDotRows); },
         dateClick(info){
-          // Toggle selected class on cells
           document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
           info.dayEl.classList.add('ol-selected');
           selectedDate = info.date;
           renderAgenda(selectedDate, calendar.getEvents());
         },
-        eventAdd(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
-        eventChange(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
-        eventRemove(arg){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
+        eventAdd(){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
+        eventChange(){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
+        eventRemove(){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
       });
 
       calendar.render();
@@ -255,7 +389,6 @@
       // Add small dot rows under dates (max 3)
       function addDotRows(){
         calendarEl.querySelectorAll('.fc-daygrid-day').forEach(td=>{
-          // Remove previous
           const old = td.querySelector('.ol-dotrow'); if(old) old.remove();
           const dateStr = td.getAttribute('data-date');
           const count = calendar.getEvents().filter(ev => (ev.startStr||'').slice(0,10)===dateStr).length;
@@ -280,8 +413,7 @@
         writeStore(payload);
       }
 
-      // ===== Quick Add dialog =====
-      const addBtn = document.getElementById('olAddBtn');
+      // ===== Quick Add dialog (gated by login) =====
       const dlg = document.getElementById('olDialog');
       const olDate = document.getElementById('olDate');
       const olTime = document.getElementById('olTime');
@@ -293,6 +425,7 @@
       function toISODate(d){ return d.toISOString().slice(0,10); }
 
       addBtn.addEventListener('click', ()=>{
+        if(!isAuthed()){ loginBtn.click(); return; }
         olDate.value = toISODate(selectedDate);
         olTime.value = '';
         olTitle.value='';
@@ -301,6 +434,7 @@
       });
       olCancel.addEventListener('click', ()=> dlg.close());
       olSave.addEventListener('click', ()=>{
+        if(!isAuthed()){ dlg.close(); loginBtn.click(); return; }
         const date = olDate.value;
         const title = olTitle.value.trim();
         const time = olTime.value;
@@ -309,7 +443,6 @@
         const start = time ? `${date}T${time}:00` : date;
         calendar.addEvent({ title, start, extendedProps: { description: notes }});
         dlg.close();
-        // jump to that month and refresh selection
         calendar.gotoDate(date);
         selectedDate = new Date(date + 'T00:00:00');
         document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
@@ -318,23 +451,22 @@
         renderAgenda(selectedDate, calendar.getEvents());
       });
 
-      // Public helpers to integrate with your site scripts
+      // Initialize auth UI now that calendar exists
+      syncAuthUI();
+
+      // Expose small helpers (optional)
       window.One1LuvCalendar = {
         add: function(list){
+          if(!isAuthed()){ loginBtn.click(); return; }
           for(const e of (list||[])){
             if(!e || !e.title || !e.start) continue;
             calendar.addEvent(e);
           }
         },
-        clear: function(){ calendar.getEvents().forEach(ev => ev.remove()); },
+        clear: function(){ if(!isAuthed()){ loginBtn.click(); return; } calendar.getEvents().forEach(ev => ev.remove()); },
         getAll: function(){ return calendar.getEvents().map(e=>({id:e.id,title:e.title,start:e.startStr,end:e.endStr,description:e.extendedProps && e.extendedProps.description}))}
       };
     })();
   </script>
-
-<footer>
-  &copy;                2025 One1LuvMCPhoenix. All rights reserved.
-</footer>
-
 </body>
 </html>
