@@ -47,7 +47,6 @@
     /* ===== FullCalendar header (iOS-like) ===== */
     .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px 0}
     .fc .fc-toolbar-title{font-size:28px;font-weight:800;letter-spacing:.3px}
-    .fc .fc-toolbar-title::first-letter{letter-spacing:0}
     .fc .fc-button{border:none;background:var(--ol-chip);color:var(--ol-fg);box-shadow:var(--ol-shadow);border-radius:14px;padding:8px 12px}
     .fc .fc-button:hover{filter:brightness(1.05)}
     .fc .fc-button-primary:disabled{opacity:.6}
@@ -77,30 +76,48 @@
     .fc .ol-dotrow{display:flex;gap:4px;position:absolute;left:6px;bottom:6px}
     .fc .ol-dot{width:6px;height:6px;border-radius:999px;background:var(--ol-blue);opacity:.9}
 
+    /* Event content (title + paperclip) */
+    .ol-evt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;display:inline-block;vertical-align:middle}
+    .ol-clip{margin-left:6px;cursor:pointer;vertical-align:middle;user-select:none}
+    .ol-clip:hover{filter:brightness(1.2)}
+
     /* Agenda (day list) beneath calendar */
     .ol-agenda{margin-top:14px;background:var(--ol-surface);border:1px solid var(--ol-grid);border-radius:16px;padding:10px 12px;box-shadow:var(--ol-shadow)}
     .ol-agenda h3{margin:2px 0 8px 0;font-size:14px;color:var(--ol-muted);font-weight:700}
     .ol-event{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;gap:10px;align-items:center}
     .ol-event-time{font-variant-numeric:tabular-nums;color:var(--ol-muted);min-width:64px}
     .ol-event-title{font-weight:700}
+    .ol-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .ol-thumbs img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
 
-    /* Quick Add (floating button) */
+    /* Quick Add / Edit (floating button) */
     .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border-radius:999px;border:none;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .ol-fab:active{transform:translateY(1px)}
     .ol-fab[disabled]{opacity:.55;cursor:not-allowed;filter:grayscale(40%)}
 
     /* Dialogs */
-    dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(520px,92vw)}
+    dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(560px,92vw)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     form.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
     form.row label{display:flex;flex-direction:column;font-size:13px;color:var(--ol-muted);gap:6px}
     form.row input, form.row textarea{border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;background:var(--ol-bg);color:var(--ol-fg)}
-    .actions{display:flex;justify-content:flex-end;gap:8px;padding:0 14px 14px}
+    .actions{display:flex;justify-content:space-between;gap:8px;padding:0 14px 14px}
+    .actions .left{display:flex;gap:8px}
+    .actions .right{display:flex;gap:8px}
     .actions button{border:1px solid var(--ol-grid);background:var(--ol-chip);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--ol-fg)}
     .actions .primary{background:var(--ol-blue);border-color:transparent}
+    .actions .danger{background:var(--ol-danger);border-color:transparent}
 
     .note{font-size:.9rem;color:var(--ol-muted);margin:6px 0 0 0}
 
+    /* Lightbox */
+    #olLightbox{width:min(900px,96vw)}
+    .ol-lightbox-body{padding:12px}
+    .ol-lightbox-img{width:100%;height:auto;border-radius:12px;border:1px solid var(--ol-grid)}
+    .ol-lightbox-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .ol-lightbox-thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
+
+    /* Small screen */
     @media (max-width:640px){
       .fc .fc-toolbar-title{font-size:22px}
       .fc .fc-daygrid-day-number{width:28px;height:28px}
@@ -148,8 +165,10 @@
   <!-- Quick add dialog + FAB (disabled until login) -->
   <button class="ol-fab" id="olAddBtn" title="Add event" disabled>＋</button>
 
+  <!-- Add/Edit dialog -->
   <dialog id="olDialog">
     <form method="dialog" class="row" id="olForm">
+      <input type="hidden" id="olEditingId" />
       <label>Date
         <input type="date" id="olDate" required />
       </label>
@@ -162,10 +181,23 @@
       <label style="grid-column:1/-1">Notes (optional)
         <textarea id="olNotes" rows="3" placeholder="Add notes..."></textarea>
       </label>
+      <label style="grid-column:1/-1">Flyer / Images (up to 4)
+        <input type="file" id="olFiles" accept="image/*" multiple />
+        <span class="note">Tip: keep images under ~1–2MB each for best performance.</span>
+      </label>
+      <div style="grid-column:1/-1">
+        <div id="olPreview" class="ol-thumbs"></div>
+        <div class="note">Click a thumbnail to remove it before saving.</div>
+      </div>
     </form>
     <div class="actions">
-      <button id="olCancel">Cancel</button>
-      <button class="primary" id="olSave">Save</button>
+      <div class="left">
+        <button id="olDelete" class="danger" style="display:none">Delete</button>
+      </div>
+      <div class="right">
+        <button id="olCancel">Cancel</button>
+        <button class="primary" id="olSave">Save</button>
+      </div>
     </div>
   </dialog>
 
@@ -177,13 +209,31 @@
         <p class="note" style="margin:0">Enter passcode to enable editing.</p>
       </div>
       <label>Passcode
-        <input type="password" id="olPass" placeholder="••••••" autocomplete="current-password" required />
+        <input type="password" id="olPass" placeholder="••••••" autocomplete="off" required />
       </label>
+      <div class="note" id="olCapsMsg" style="display:none">Caps Lock is ON</div>
       <div class="note" id="olLoginMsg" style="color:var(--ol-danger);display:none">Incorrect passcode.</div>
     </form>
     <div class="actions">
-      <button id="olLoginCancel">Cancel</button>
-      <button class="primary" id="olLoginGo">Unlock</button>
+      <div></div>
+      <div class="right">
+        <button id="olLoginCancel">Cancel</button>
+        <button class="primary" id="olLoginGo">Unlock</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Lightbox dialog -->
+  <dialog id="olLightbox">
+    <div class="ol-lightbox-body">
+      <img id="olLightboxImg" class="ol-lightbox-img" alt="Attachment preview" />
+      <div id="olLightboxThumbs" class="ol-lightbox-thumbs"></div>
+    </div>
+    <div class="actions">
+      <div></div>
+      <div class="right">
+        <button id="olLightboxClose" class="primary">Close</button>
+      </div>
     </div>
   </dialog>
 
@@ -194,54 +244,34 @@
   <script>
     /* ===========================
        LIGHTWEIGHT AUTH (Option 1)
-       Passcode: 1LFF1L  (stored as SHA-1 hash for light obscurity)
+       Passcode: 1LFF1L
        =========================== */
 
     // SHA-1("1LFF1L") = 48aafb42add3af0524d8c9b54c8ec644aa0d30de
     const OL_HASHED = "48aafb42add3af0524d8c9b54c8ec644aa0d30de";
+    const OL_PLAIN  = "1LFF1L"; // plain-text fallback (still only in client)
     const OL_AUTH_KEY = "one1luv_auth";
     const OL_EXP_KEY  = "one1luv_exp";
 
-    // Minimal SHA-1 (string -> hex). Not cryptographically strong in JS environments; fine for this light gate.
-    function sha1(str){
-      function rotl(n,s){return (n<<s)|(n>>> (32-s));}
-      function toBytes(s){
-        const out=[]; for(let i=0;i<s.length;i++){
-          const c=s.charCodeAt(i);
-          if(c<128) out.push(c);
-          else if(c<2048){ out.push((c>>6)|192,(c&63)|128); }
-          else { out.push((c>>12)|224, ((c>>6)&63)|128, (c&63)|128); }
-        }
-        return out;
-      }
-      const msg=toBytes(str);
-      const l=msg.length;
-      msg.push(0x80);
-      while((msg.length%64)!==56) msg.push(0);
-      const bitLen=l*8;
-      for(let i=7;i>=0;i--) msg.push((bitLen>>> (i*8))&255);
-      const words=new Array(80);
-      let h0=0x67452301, h1=0xEFCDAB89, h2=0x98BADCFE, h3=0x10325476, h4=0xC3D2E1F0;
-      for(let i=0;i<msg.length;i+=64){
-        for(let j=0;j<16;j++){
-          const k=i+j*4;
-          words[j]= (msg[k]<<24) | (msg[k+1]<<16) | (msg[k+2]<<8) | (msg[k+3]);
-        }
-        for(let j=16;j<80;j++) words[j]=rotl(words[j-3]^words[j-8]^words[j-14]^words[j-16],1);
-        let a=h0,b=h1,c=h2,d=h3,e=h4;
-        for(let j=0;j<80;j++){
-          let f,k;
-          if(j<20){ f=(b&c)|((~b)&d); k=0x5A827999; }
-          else if(j<40){ f=b^c^d; k=0x6ED9EBA1; }
-          else if(j<60){ f=(b&c)|(b&d)|(c&d); k=0x8F1BBCDC; }
-          else { f=b^c^d; k=0xCA62C1D6; }
-          const temp=(rotl(a,5)+f+e+k+(words[j]>>>0))>>>0;
-          e=d; d=c; c=rotl(b,30)>>>0; b=a; a=temp;
-        }
-        h0=(h0+a)>>>0; h1=(h1+b)>>>0; h2=(h2+c)>>>0; h3=(h3+d)>>>0; h4=(h4+e)>>>0;
-      }
-      function hex(n){ return ("00000000"+n.toString(16)).slice(-8); }
-      return hex(h0)+hex(h1)+hex(h2)+hex(h3)+hex(h4);
+    async function sha1WebCrypto(str){
+      const enc = new TextEncoder().encode(str);
+      const buf = await crypto.subtle.digest("SHA-1", enc);
+      const bytes = new Uint8Array(buf);
+      return Array.from(bytes).map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    function sha1Fallback(str){
+      function rotl(n,s){return (n<<s)|(n>>>(32-s));}
+      function toBytes(s){const o=[];for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(c<128)o.push(c);else if(c<2048){o.push((c>>6)|192,(c&63)|128);}else{o.push((c>>12)|224,((c>>6)&63)|128,(c&63)|128);} } return o;}
+      const m=toBytes(str),l=m.length;m.push(0x80);while((m.length%64)!==56)m.push(0);const bl=l*8;for(let i=7;i>=0;i--)m.push((bl>>>(i*8))&255);const w=new Array(80);let h0=0x67452301,h1=0xEFCDAB89,h2=0x98BADCFE,h3=0x10325476,h4=0xC3D2E1F0;for(let i=0;i<m.length;i+=64){for(let j=0;j<16;j++){const k=i+j*4;w[j]=(m[k]<<24)|(m[k+1]<<16)|(m[k+2]<<8)|(m[k+3]);}for(let j=16;j<80;j++)w[j]=rotl(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);let a=h0,b=h1,c=h2,d=h3,e=h4;for(let j=0;j<80;j++){let f,k;if(j<20){f=(b&c)|((~b)&d);k=0x5A827999;}else if(j<40){f=b^c^d;k=0x6ED9EBA1;}else if(j<60){f=(b&c)|(b&d)|(c&d);k=0x8F1BBCDC;}else{f=b^c^d;k=0xCA62C1D6;}const t=(rotl(a,5)+f+e+k+(w[j]>>>0))>>>0;e=d;d=c;c=rotl(b,30)>>>0;b=a;a=t;}h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;}
+      function hex(n){return("00000000"+n.toString(16)).slice(-8);} return hex(h0)+hex(h1)+hex(h2)+hex(h3)+hex(h4);
+    }
+    async function verifyPasscode(input){
+      const val = input.trim();
+      if(!val) return false;
+      if (val === OL_PLAIN) return true;
+      try{ if(await sha1WebCrypto(val)===OL_HASHED) return true; }catch(e){}
+      try{ if(sha1Fallback(val)===OL_HASHED) return true; }catch(e){}
+      return false;
     }
 
     function setAuth(minutes=60){
@@ -257,7 +287,11 @@
     function isAuthed(){
       const ok = sessionStorage.getItem(OL_AUTH_KEY)==="ok";
       const exp = parseInt(sessionStorage.getItem(OL_EXP_KEY)||"0",10);
-      if(!ok || Date.now()>exp){ clearAuth(); return false; }
+      if(!ok || Date.now()>exp){
+        sessionStorage.removeItem(OL_AUTH_KEY);
+        sessionStorage.removeItem(OL_EXP_KEY);
+        return false;
+      }
       return true;
     }
 
@@ -270,24 +304,32 @@
     const loginDlg = document.getElementById("olLoginDialog");
     const passInput = document.getElementById("olPass");
     const loginMsg = document.getElementById("olLoginMsg");
+    const capsMsg = document.getElementById("olCapsMsg");
     const loginGo = document.getElementById("olLoginGo");
     const loginCancel = document.getElementById("olLoginCancel");
 
-    loginBtn.addEventListener("click", ()=>{ loginMsg.style.display="none"; passInput.value=""; loginDlg.showModal(); passInput.focus(); });
-    loginCancel.addEventListener("click", ()=> loginDlg.close());
-    loginGo.addEventListener("click", ()=>{
-      const val = passInput.value.trim();
-      if(!val) return;
-      if(sha1(val)===OL_HASHED){
-        setAuth(60); // 60 minute edit window
-        loginDlg.close();
-      } else {
-        loginMsg.style.display="block";
-      }
+    // Lightbox
+    const lb = document.getElementById('olLightbox');
+    const lbImg = document.getElementById('olLightboxImg');
+    const lbThumbs = document.getElementById('olLightboxThumbs');
+    const lbClose = document.getElementById('olLightboxClose');
+
+    loginBtn.addEventListener("click", ()=>{
+      loginMsg.style.display="none";
+      capsMsg.style.display="none";
+      passInput.value="";
+      loginDlg.showModal();
+      passInput.focus();
     });
-
+    loginCancel.addEventListener("click", ()=> loginDlg.close());
+    passInput.addEventListener("keydown",(e)=>{ const caps=e.getModifierState&&e.getModifierState("CapsLock"); capsMsg.style.display=caps?"block":"none"; });
+    passInput.addEventListener("input", ()=>{ loginMsg.style.display="none"; });
+    passInput.addEventListener("keypress",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); loginGo.click(); }});
+    loginGo.addEventListener("click", async ()=>{
+      const ok = await verifyPasscode(passInput.value);
+      if (ok){ setAuth(60); loginDlg.close(); } else { loginMsg.style.display="block"; }
+    });
     logoutBtn.addEventListener("click", ()=> clearAuth());
-
     function syncAuthUI(){
       const yes = isAuthed();
       addBtn.disabled = !yes;
@@ -299,7 +341,7 @@
 
     // =============== Calendar + Agenda ===============
     (function(){
-      const CAL_KEY = 'ol_fullcalendar_events_v1';
+      const CAL_KEY = 'ol_fullcalendar_events_v2'; // bump key for new attachment format
       const readStore = () => { try{return JSON.parse(localStorage.getItem(CAL_KEY))||[];}catch{return []} };
       const writeStore = (arr) => localStorage.setItem(CAL_KEY, JSON.stringify(arr));
 
@@ -319,6 +361,7 @@
       const agendaList = document.getElementById('olAgendaList');
 
       let selectedDate = new Date();
+      let currentEditEvent = null;
 
       function formatDayTitle(d){
         const now = new Date();
@@ -347,32 +390,84 @@
           const box = document.createElement('div');
           const ttl = document.createElement('div'); ttl.className='ol-event-title'; ttl.textContent = ev.title || '(untitled)';
           box.appendChild(ttl);
+
+          // Notes
           if(ev.extendedProps && ev.extendedProps.description){
             const notes = document.createElement('div'); notes.style.color='var(--ol-muted)'; notes.textContent = ev.extendedProps.description; box.appendChild(notes);
           }
-          row.appendChild(tm); row.appendChild(box); agendaList.appendChild(row);
+
+          // Thumbnails for attachments
+          const atts = (ev.extendedProps && ev.extendedProps.attachments) || [];
+          if(atts.length){
+            const wrap = document.createElement('div'); wrap.className='ol-thumbs';
+            atts.forEach((a,idx)=>{
+              const img = document.createElement('img');
+              img.src = a.dataUrl;
+              img.alt = a.name || ('Attachment '+(idx+1));
+              img.addEventListener('click', ()=> openLightbox(atts, idx));
+              wrap.appendChild(img);
+            });
+            box.appendChild(wrap);
+          }
+
+          row.appendChild(tm); row.appendChild(box);
+          row.addEventListener('click', ()=>{ if(isAuthed()) openEdit(ev); });
+          agendaList.appendChild(row);
         }
       }
+
+      function openLightbox(attachments, index=0){
+        if(!attachments || !attachments.length) return;
+        let cur = Math.max(0, Math.min(index, attachments.length-1));
+        function renderLB(){
+          lbImg.src = attachments[cur].dataUrl;
+          lbImg.alt = attachments[cur].name || 'Attachment';
+          lbThumbs.innerHTML = '';
+          attachments.forEach((a,i)=>{
+            const t = document.createElement('img');
+            t.src = a.dataUrl; t.alt = a.name || 'Attachment';
+            if(i===cur){ t.style.outline = '2px solid var(--ol-blue)'; t.style.outlineOffset='2px'; }
+            t.addEventListener('click', ()=>{ cur=i; renderLB(); });
+            lbThumbs.appendChild(t);
+          });
+        }
+        renderLB();
+        lb.showModal();
+      }
+      lbClose.addEventListener('click', ()=> lb.close());
 
       // Build FullCalendar
       const calendar = new FullCalendar.Calendar(calendarEl, {
         height: 'auto',
         initialView: 'dayGridMonth',
         fixedWeekCount: true,
-        headerToolbar: {
-          left: 'prev,today,next',
-          center: 'title',
-          right: ''
-        },
+        headerToolbar: { left: 'prev,today,next', center: 'title', right: '' },
         dayMaxEventRows: 3,
         events: readStore(),
+        eventContent(arg){
+          // Add paperclip if attachments
+          const hasAtt = ((arg.event.extendedProps && arg.event.extendedProps.attachments) || []).length > 0;
+          const safeTitle = document.createElement('div');
+          safeTitle.textContent = arg.event.title || '(untitled)';
+          const html = `
+            <span class="ol-evt">${safeTitle.textContent}</span>
+            ${hasAtt ? `<span class="ol-clip" title="View attachments" data-eid="${arg.event.id}">📎</span>` : ''}`;
+          return { html };
+        },
+        eventDidMount(){ queueMicrotask(()=>{ attachClipHandlers(); addDotRows(); }); },
         datesSet(){ queueMicrotask(addDotRows); },
-        eventDidMount(){ queueMicrotask(addDotRows); },
+        eventClick(info){
+          if(!isAuthed()){ return; }
+          // ignore clicks on the paperclip (handled separately)
+          if(info.jsEvent && (info.jsEvent.target.closest('.ol-clip'))) return;
+          openEdit(info.event);
+        },
         dateClick(info){
           document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
           info.dayEl.classList.add('ol-selected');
           selectedDate = info.date;
           renderAgenda(selectedDate, calendar.getEvents());
+          if(isAuthed()){ openAdd(selectedDate); }
         },
         eventAdd(){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
         eventChange(){ persistEvents(); queueMicrotask(addDotRows); renderAgenda(selectedDate, calendar.getEvents()); },
@@ -402,37 +497,118 @@
         });
       }
 
+      function attachClipHandlers(){
+        calendarEl.querySelectorAll('.ol-clip').forEach(el=>{
+          el.onclick = (e)=>{
+            e.stopPropagation();
+            const id = el.getAttribute('data-eid');
+            const ev = calendar.getEventById(id);
+            const atts = (ev && ev.extendedProps && ev.extendedProps.attachments) || [];
+            if(atts.length){ openLightbox(atts, 0); }
+          };
+        });
+      }
+
       function persistEvents(){
         const payload = calendar.getEvents().map(ev => ({
           id: ev.id,
           title: ev.title,
           start: ev.startStr,
           end: ev.endStr || undefined,
-          description: ev.extendedProps && ev.extendedProps.description || undefined
+          description: ev.extendedProps && ev.extendedProps.description || undefined,
+          attachments: ev.extendedProps && ev.extendedProps.attachments || []
         }));
         writeStore(payload);
       }
 
-      // ===== Quick Add dialog (gated by login) =====
+      // ===== Add/Edit dialog (gated by login) =====
       const dlg = document.getElementById('olDialog');
+      const olEditingId = document.getElementById('olEditingId');
       const olDate = document.getElementById('olDate');
       const olTime = document.getElementById('olTime');
       const olTitle = document.getElementById('olTitle');
       const olNotes = document.getElementById('olNotes');
+      const olFiles = document.getElementById('olFiles');
+      const olPreview = document.getElementById('olPreview');
       const olCancel = document.getElementById('olCancel');
       const olSave = document.getElementById('olSave');
+      const olDelete = document.getElementById('olDelete');
+
+      let stagedAttachments = []; // {name, mime, dataUrl}
 
       function toISODate(d){ return d.toISOString().slice(0,10); }
+      function timeFromStartStr(startStr){
+        if(!startStr || startStr.length<11) return '';
+        const t = startStr.slice(11,16);
+        return /^\d{2}:\d{2}$/.test(t) ? t : '';
+      }
 
-      addBtn.addEventListener('click', ()=>{
+      function renderThumbs(){
+        olPreview.innerHTML = '';
+        stagedAttachments.forEach((a,i)=>{
+          const img = document.createElement('img');
+          img.src = a.dataUrl; img.alt = a.name || ('Attachment '+(i+1));
+          img.title = "Click to remove";
+          img.addEventListener('click', ()=>{ stagedAttachments.splice(i,1); renderThumbs(); });
+          olPreview.appendChild(img);
+        });
+      }
+
+      function readFilesToDataURLs(files){
+        const max = 4; // cap
+        const slice = Array.from(files||[]).slice(0, max - stagedAttachments.length);
+        const jobs = slice.map(f => new Promise((res,rej)=>{
+          const reader = new FileReader();
+          reader.onload = ()=> res({name:f.name, mime:f.type, dataUrl:String(reader.result)});
+          reader.onerror = rej;
+          reader.readAsDataURL(f);
+        }));
+        return Promise.all(jobs);
+      }
+
+      olFiles.addEventListener('change', async ()=>{
+        if(!olFiles.files || !olFiles.files.length) return;
+        const add = await readFilesToDataURLs(olFiles.files);
+        stagedAttachments.push(...add);
+        renderThumbs();
+        olFiles.value = ""; // reset for future adds
+      });
+
+      function openAdd(date){
         if(!isAuthed()){ loginBtn.click(); return; }
-        olDate.value = toISODate(selectedDate);
+        currentEditEvent = null;
+        olEditingId.value = '';
+        stagedAttachments = [];
+        renderThumbs();
+
+        olDate.value = toISODate(date);
         olTime.value = '';
         olTitle.value='';
         olNotes.value='';
+        olDelete.style.display = 'none';
         dlg.showModal();
-      });
+      }
+
+      function openEdit(event){
+        if(!isAuthed()){ loginBtn.click(); return; }
+        currentEditEvent = event;
+        olEditingId.value = event.id || '';
+        const startISO = event.startStr || (event.start ? event.start.toISOString() : '');
+        olDate.value = (startISO||'').slice(0,10);
+        olTime.value = timeFromStartStr(startISO);
+        olTitle.value = event.title || '';
+        olNotes.value = (event.extendedProps && event.extendedProps.description) || '';
+
+        stagedAttachments = ((event.extendedProps && event.extendedProps.attachments) || []).map(a=>({name:a.name||'', mime:a.mime||'', dataUrl:a.dataUrl}));
+        renderThumbs();
+
+        olDelete.style.display = 'inline-block';
+        dlg.showModal();
+      }
+
+      addBtn.addEventListener('click', ()=> openAdd(selectedDate));
       olCancel.addEventListener('click', ()=> dlg.close());
+
       olSave.addEventListener('click', ()=>{
         if(!isAuthed()){ dlg.close(); loginBtn.click(); return; }
         const date = olDate.value;
@@ -441,7 +617,18 @@
         const notes = olNotes.value.trim();
         if(!date || !title) return;
         const start = time ? `${date}T${time}:00` : date;
-        calendar.addEvent({ title, start, extendedProps: { description: notes }});
+
+        // If editing existing event
+        if(currentEditEvent){
+          currentEditEvent.setProp('title', title);
+          currentEditEvent.setStart(start);
+          currentEditEvent.setExtendedProp('description', notes || undefined);
+          currentEditEvent.setExtendedProp('attachments', stagedAttachments);
+        } else {
+          // New event
+          calendar.addEvent({ title, start, extendedProps: { description: notes, attachments: stagedAttachments }});
+        }
+
         dlg.close();
         calendar.gotoDate(date);
         selectedDate = new Date(date + 'T00:00:00');
@@ -451,10 +638,19 @@
         renderAgenda(selectedDate, calendar.getEvents());
       });
 
+      olDelete.addEventListener('click', ()=>{
+        if(currentEditEvent){
+          currentEditEvent.remove();
+          currentEditEvent = null;
+          dlg.close();
+          renderAgenda(selectedDate, calendar.getEvents());
+        }
+      });
+
       // Initialize auth UI now that calendar exists
       syncAuthUI();
 
-      // Expose small helpers (optional)
+      // Expose helpers (optional)
       window.One1LuvCalendar = {
         add: function(list){
           if(!isAuthed()){ loginBtn.click(); return; }
@@ -464,7 +660,7 @@
           }
         },
         clear: function(){ if(!isAuthed()){ loginBtn.click(); return; } calendar.getEvents().forEach(ev => ev.remove()); },
-        getAll: function(){ return calendar.getEvents().map(e=>({id:e.id,title:e.title,start:e.startStr,end:e.endStr,description:e.extendedProps && e.extendedProps.description}))}
+        getAll: function(){ return calendar.getEvents().map(e=>({id:e.id,title:e.title,start:e.startStr,end:e.endStr,description:e.extendedProps && e.extendedProps.description,attachments:e.extendedProps && e.extendedProps.attachments}))}
       };
     })();
   </script>
