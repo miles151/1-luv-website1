@@ -11,62 +11,32 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
   <style>
-    /* =====================
-       ONE1LUV THEME PALETTE
-       ===================== */
-    :root{
-      --ol-bg: #0b0d12;
-      --ol-surface: #0f1218;
-      --ol-fg: #e8ecf2;
-      --ol-muted: #98a3b6;
-      --ol-blue: #1e90ff;
-      --ol-blue-2: #69b6ff;
-      --ol-grid: #232834;
-      --ol-chip: #151a22;
-      --ol-shadow: 0 10px 30px rgba(0,0,0,.45);
-      --ol-danger: #ff4d4f;
-      --ol-ok: #22c55e;
-    }
-
-    body{background:var(--ol-bg);color:var(--ol-fg);font:16px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui, sans-serif;margin:0}
-
-    header{background:transparent;padding:12px 16px}
-    header h1{margin:0;color:var(--ol-blue)}
-    nav ul{list-style:none;margin:8px 0 0 0;padding:0;display:flex;gap:10px;flex-wrap:wrap}
+    :root{ --ol-bg:#0b0d12; --ol-surface:#0f1218; --ol-fg:#e8ecf2; --ol-muted:#98a3b6; --ol-blue:#1e90ff; --ol-blue-2:#69b6ff; --ol-grid:#232834; --ol-chip:#151a22; --ol-shadow:0 10px 30px rgba(0,0,0,.45); --ol-danger:#ff4d4f; --ol-ok:#22c55e; }
+    body{background:var(--ol-bg);color:var(--ol-fg);font:16px system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;margin:0}
+    header{padding:12px 16px} header h1{margin:0;color:var(--ol-blue)}
+    nav ul{list-style:none;margin:8px 0 0;padding:0;display:flex;gap:10px;flex-wrap:wrap}
     nav a{color:var(--ol-muted);text-decoration:none;padding:6px 10px;border-radius:10px}
     nav a.active, nav a:hover{background:var(--ol-chip);color:var(--ol-fg)}
-
     .ol-wrap{max-width:1100px;margin:16px auto 40px;padding:0 16px}
-
-    .ol-authbar{display:flex;justify-content:flex-end;gap:8px;margin:8px 0 12px 0}
+    .ol-authbar{display:flex;justify-content:flex-end;gap:8px;margin:8px 0 12px}
     .btn{border:1px solid var(--ol-grid);background:var(--ol-chip);color:var(--ol-fg);padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .btn.primary{background:var(--ol-blue);border-color:transparent;color:#fff}
     .btn.warn{background:#1b1b1b;color:#fff;border-color:#333}
-
-    .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px 0}
+    .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px}
     .fc .fc-toolbar-title{font-size:28px;font-weight:800;letter-spacing:.3px}
     .fc .fc-button{border:none;background:var(--ol-chip);color:var(--ol-fg);box-shadow:var(--ol-shadow);border-radius:14px;padding:8px 12px}
-    .fc .fc-button:hover{filter:brightness(1.05)}
-    .fc .fc-button-primary:disabled{opacity:.6}
-
-    .fc .fc-scrollgrid{border:1px solid var(--ol-grid);border-radius:16px;overflow:hidden;box-shadow:var(--ol-shadow);}
-    .fc-theme-standard .fc-scrollgrid{border-color:var(--ol-grid)}
-    .fc-theme-standard td, .fc-theme-standard th{border-color:var(--ol-grid)}
-
+    .fc .fc-scrollgrid{border:1px solid var(--ol-grid);border-radius:16px;overflow:hidden;box-shadow:var(--ol-shadow)}
+    .fc-theme-standard td,.fc-theme-standard th{border-color:var(--ol-grid)}
     .fc .fc-col-header-cell-cushion{color:var(--ol-muted);font-weight:600;padding:10px 0}
     .fc .fc-daygrid-day-top{justify-content:flex-start;padding:6px}
     .fc .fc-daygrid-day-number{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:999px;font-weight:700;color:var(--ol-fg);text-decoration:none}
     .fc .fc-day-other .fc-daygrid-day-number{color:var(--ol-muted)}
     .fc .fc-day-today .fc-daygrid-day-number{outline:2px solid var(--ol-blue);outline-offset:2px}
     .fc .ol-selected .fc-daygrid-day-number{background:var(--ol-blue);color:#fff}
-
     .fc .ol-dotrow{display:flex;gap:4px;position:absolute;left:6px;bottom:6px}
     .fc .ol-dot{width:6px;height:6px;border-radius:999px;background:var(--ol-blue);opacity:.9}
-
     .ol-evt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;display:inline-block;vertical-align:middle}
     .ol-clip{margin-left:6px;cursor:pointer;vertical-align:middle;user-select:none}
-    .ol-clip:hover{filter:brightness(1.2)}
-
     .ol-agenda{margin-top:14px;background:var(--ol-surface);border:1px solid var(--ol-grid);border-radius:16px;padding:10px 12px;box-shadow:var(--ol-shadow)}
     .ol-agenda h3{margin:2px 0 8px 0;font-size:14px;color:var(--ol-muted);font-weight:700}
     .ol-event{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;gap:10px;align-items:center}
@@ -74,42 +44,24 @@
     .ol-event-title{font-weight:700}
     .ol-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
     .ol-thumbs img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
-
-    .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border-radius:999px;border:none;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
-    .ol-fab:active{transform:translateY(1px)}
+    .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border:none;border-radius:999px;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .ol-fab[disabled]{opacity:.55;cursor:not-allowed;filter:grayscale(40%)}
-
     dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(560px,92vw)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     form.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
     form.row label{display:flex;flex-direction:column;font-size:13px;color:var(--ol-muted);gap:6px}
-    form.row input, form.row textarea{border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;background:var(--ol-bg);color:var(--ol-fg)}
+    form.row input,form.row textarea{border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;background:var(--ol-bg);color:var(--ol-fg)}
     .actions{display:flex;justify-content:space-between;gap:8px;padding:0 14px 14px}
-    .actions .left{display:flex;gap:8px}
-    .actions .right{display:flex;gap:8px}
-    .actions button{border:1px solid var(--ol-grid);background:var(--ol-chip);padding:10px 14px;border-radius:12px;cursor:pointer;color:var(--ol-fg)}
     .actions .primary{background:var(--ol-blue);border-color:transparent}
     .actions .danger{background:var(--ol-danger);border-color:transparent}
-
-    .note{font-size:.9rem;color:var(--ol-muted);margin:6px 0 0 0}
-
-    #olLightbox{width:min(900px,96vw)}
-    .ol-lightbox-body{padding:12px}
+    #olLightbox{width:min(900px,96vw)} .ol-lightbox-body{padding:12px}
     .ol-lightbox-img{width:100%;height:auto;border-radius:12px;border:1px solid var(--ol-grid)}
     .ol-lightbox-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
     .ol-lightbox-thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
-
-    @media (max-width:640px){
-      .fc .fc-toolbar-title{font-size:22px}
-      .fc .fc-daygrid-day-number{width:28px;height:28px}
-      .ol-event{flex-direction:column;align-items:flex-start}
-      .ol-event-time{min-width:unset}
-      form.row{grid-template-columns:1fr}
-    }
+    @media (max-width:640px){ .fc .fc-toolbar-title{font-size:22px} .fc .fc-daygrid-day-number{width:28px;height:28px} .ol-event{flex-direction:column;align-items:flex-start} .ol-event-time{min-width:unset} form.row{grid-template-columns:1fr} }
   </style>
 </head>
 <body>
-
   <header>
     <h1>One1LuvMCPhoenix</h1>
     <nav>
@@ -142,21 +94,14 @@
 
   <button class="ol-fab" id="olAddBtn" title="Add event" disabled>＋</button>
 
+  <!-- Add/Edit dialog -->
   <dialog id="olDialog">
     <form method="dialog" class="row" id="olForm">
       <input type="hidden" id="olEditingId" />
-      <label>Date
-        <input type="date" id="olDate" required />
-      </label>
-      <label>Time (optional)
-        <input type="time" id="olTime" />
-      </label>
-      <label style="grid-column:1/-1">Title
-        <input type="text" id="olTitle" placeholder="Event title" required />
-      </label>
-      <label style="grid-column:1/-1">Notes (optional)
-        <textarea id="olNotes" rows="3" placeholder="Add notes..."></textarea>
-      </label>
+      <label>Date <input type="date" id="olDate" required /></label>
+      <label>Time (optional) <input type="time" id="olTime" /></label>
+      <label style="grid-column:1/-1">Title <input type="text" id="olTitle" placeholder="Event title" required /></label>
+      <label style="grid-column:1/-1">Notes (optional) <textarea id="olNotes" rows="3" placeholder="Add notes..."></textarea></label>
       <label style="grid-column:1/-1">Flyer / Images (up to 4)
         <input type="file" id="olFiles" accept="image/*" multiple />
         <span class="note">Tip: images are auto-compressed to save quickly.</span>
@@ -167,37 +112,29 @@
       </div>
     </form>
     <div class="actions">
-      <div class="left">
-        <button id="olDelete" class="danger" style="display:none">Delete</button>
-      </div>
-      <div class="right">
-        <button id="olCancel">Cancel</button>
-        <button class="primary" id="olSave">Save</button>
-      </div>
+      <div class="left"><button id="olDelete" class="danger" style="display:none">Delete</button></div>
+      <div class="right"><button id="olCancel">Cancel</button><button class="primary" id="olSave">Save</button></div>
     </div>
   </dialog>
 
+  <!-- Login dialog -->
   <dialog id="olLoginDialog">
     <form method="dialog" class="row" id="olLoginForm" style="grid-template-columns:1fr">
       <div style="padding:0 14px">
         <h3 style="margin:6px 0 4px 0;color:var(--ol-blue)">Members Login</h3>
         <p class="note" style="margin:0">Enter passcode to enable editing.</p>
       </div>
-      <label>Passcode
-        <input type="password" id="olPass" placeholder="••••••" autocomplete="off" required />
-      </label>
+      <label>Passcode <input type="password" id="olPass" placeholder="••••••" autocomplete="off" required /></label>
       <div class="note" id="olCapsMsg" style="display:none">Caps Lock is ON</div>
       <div class="note" id="olLoginMsg" style="color:var(--ol-danger);display:none">Incorrect passcode.</div>
     </form>
     <div class="actions">
       <div></div>
-      <div class="right">
-        <button id="olLoginCancel">Cancel</button>
-        <button class="primary" id="olLoginGo">Unlock</button>
-      </div>
+      <div class="right"><button id="olLoginCancel">Cancel</button><button class="primary" id="olLoginGo">Unlock</button></div>
     </div>
   </dialog>
 
+  <!-- Lightbox -->
   <dialog id="olLightbox">
     <div class="ol-lightbox-body">
       <img id="olLightboxImg" class="ol-lightbox-img" alt="Attachment preview" />
@@ -205,9 +142,7 @@
     </div>
     <div class="actions">
       <div></div>
-      <div class="right">
-        <button id="olLightboxClose" class="primary">Close</button>
-      </div>
+      <div class="right"><button id="olLightboxClose" class="primary">Close</button></div>
     </div>
   </dialog>
 
@@ -215,472 +150,228 @@
     &copy; 2025 One1LuvMCPhoenix. All rights reserved.
   </footer>
 
-  <!-- Main logic as a module so we can import Firebase -->
   <script type="module">
-    /*****************************
-     *  🔐 LIGHTWEIGHT AUTH (UI)
-     *  Passcode: 1LFF1L
-     *****************************/
-    const OL_HASHED = "48aafb42add3af0524d8c9b54c8ec644aa0d30de"; // SHA-1 of "1LFF1L"
-    const OL_PLAIN  = "1LFF1L";
-    const OL_AUTH_KEY = "one1luv_auth";
-    const OL_EXP_KEY  = "one1luv_exp";
+    /************ Auth (UI) ************/
+    const OL_HASHED="48aafb42add3af0524d8c9b54c8ec644aa0d30de", OL_PLAIN="1LFF1L", OL_AUTH_KEY="one1luv_auth", OL_EXP_KEY="one1luv_exp";
+    async function sha1WebCrypto(s){const e=new TextEncoder().encode(s),b=await crypto.subtle.digest("SHA-1",e);return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
+    function sha1Fallback(s){function r(n,t){return n<<t|n>>>32-t}function y(s){const o=[];for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);c<128?o.push(c):c<2048?o.push(c>>6|192,c&63|128):o.push(c>>12|224,c>>6&63|128,c&63|128)}return o}const m=y(s),l=m.length;m.push(128);for(;m.length%64!==56;)m.push(0);const bl=l*8;for(let i=7;i>=0;i--)m.push(bl>>>8*i&255);const w=new Array(80);let h0=1732584193,h1=4023233417,h2=2562383102,h3=271733878,h4=3285377520;for(let i=0;i<m.length;i+=64){for(let j=0;j<16;j++){const k=i+4*j;w[j]=(m[k]<<24|m[k+1]<<16|m[k+2]<<8|m[k+3])>>>0}for(let j=16;j<80;j++)w[j]=r(w[j-3]^w[j-8]^w[j-14]^w[j-16],1)>>>0;let a=h0,b=h1,c=h2,d=h3,e=h4;for(let j=0;j<80;j++){let f,k;if(j<20){f=b&c|~b&d;k=1518500249}else if(j<40){f=b^c^d;k=1859775393}else if(j<60){f=b&c|b&d|c&d;k=2400959708}else{f=b^c^d;k=3395469782}const t=(r(a,5)+f+e+k+(w[j]>>>0))>>>0;e=d;d=c;c=r(b,30)>>>0;b=a;a=t}h0=h0+a>>>0;h1=h1+b>>>0;h2=h2+c>>>0;h3=h3+d>>>0;h4=h4+e>>>0}function hex(n){return("00000000"+n.toString(16)).slice(-8)}return hex(h0)+hex(h1)+hex(h2)+hex(h3)+hex(h4)}
+    async function verifyPasscode(v){if(!v) return false; if(v===OL_PLAIN) return true; try{if(await sha1WebCrypto(v)===OL_HASHED) return true}catch{} try{if(sha1Fallback(v)===OL_HASHED) return true}catch{} return false}
+    function setAuth(min=180){sessionStorage.setItem(OL_AUTH_KEY,"ok");sessionStorage.setItem(OL_EXP_KEY,String(Date.now()+min*60*1000));syncAuthUI()}
+    function clearAuth(){sessionStorage.removeItem(OL_AUTH_KEY);sessionStorage.removeItem(OL_EXP_KEY);syncAuthUI()}
+    function isAuthed(){const ok=sessionStorage.getItem(OL_AUTH_KEY)==="ok";const exp=parseInt(sessionStorage.getItem(OL_EXP_KEY)||"0",10);if(!ok||Date.now()>exp){sessionStorage.removeItem(OL_AUTH_KEY);sessionStorage.removeItem(OL_EXP_KEY);return false}return true}
+    const loginBtn=document.getElementById("olLoginBtn"),logoutBtn=document.getElementById("olLogoutBtn"),authStatus=document.getElementById("olAuthStatus"),addBtn=document.getElementById("olAddBtn"),loginDlg=document.getElementById("olLoginDialog"),passInput=document.getElementById("olPass"),loginMsg=document.getElementById("olLoginMsg"),capsMsg=document.getElementById("olCapsMsg"),loginGo=document.getElementById("olLoginGo"),loginCancel=document.getElementById("olLoginCancel");
+    loginBtn.addEventListener("click",()=>{loginMsg.style.display="none";capsMsg.style.display="none";passInput.value="";loginDlg.showModal();passInput.focus()});
+    loginCancel.addEventListener("click",()=>loginDlg.close());
+    passInput.addEventListener("keydown",e=>{const caps=e.getModifierState&&e.getModifierState("CapsLock");capsMsg.style.display=caps?"block":"none"});
+    passInput.addEventListener("input",()=>loginMsg.style.display="none");
+    passInput.addEventListener("keypress",e=>{if(e.key==="Enter"){e.preventDefault();loginGo.click()}});
+    loginGo.addEventListener("click",async()=>{const ok=await verifyPasscode(passInput.value); if(ok){setAuth(180);loginDlg.close()} else {loginMsg.style.display="block"}});
+    logoutBtn.addEventListener("click",()=>clearAuth());
+    function syncAuthUI(){const yes=isAuthed();addBtn.disabled=!yes;loginBtn.style.display=yes?"none":"inline-block";logoutBtn.style.display=yes?"inline-block":"none";authStatus.textContent=yes?"Editing enabled.":"Read-only. Login to add/edit events.";authStatus.style.color=yes?"var(--ol-ok)":"var(--ol-muted)"}
 
-    async function sha1WebCrypto(str){
-      const enc = new TextEncoder().encode(str);
-      const buf = await crypto.subtle.digest("SHA-1", enc);
-      const bytes = new Uint8Array(buf);
-      return Array.from(bytes).map(b=>b.toString(16).padStart(2,"0")).join("");
-    }
-    function sha1Fallback(str){
-      function rotl(n,s){return (n<<s)|(n>>>(32-s));}
-      function toBytes(s){const o=[];for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(c<128)o.push(c);else if(c<2048){o.push((c>>6)|192,(c&63)|128);}else{o.push((c>>12)|224,((c>>6)&63)|128,(c&63)|128);} } return o;}
-      const m=toBytes(str),l=m.length;m.push(0x80);while((m.length%64)!==56)m.push(0);const bl=l*8;for(let i=7;i>=0;i--)m.push((bl>>>(i*8))&255);const w=new Array(80);let h0=0x67452301,h1=0xEFCDAB89,h2=0x98BADCFE,h3=0x10325476,h4=0xC3D2E1F0;for(let i=0;i<m.length;i+=64){for(let j=0;j<16;j++){const k=i+j*4;w[j]=(m[k]<<24)|(m[k+1]<<16)|(m[k+2]<<8)|(m[k+3]);}for(let j=16;j<80;j++)w[j]=rotl(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);let a=h0,b=h1,c=h2,d=h3,e=h4;for(let j=0;j<80;j++){let f,k;if(j<20){f=(b&c)|((~b)&d);k=0x5A827999;}else if(j<40){f=b^c^d;k=0x6ED9EBA1;}else if(j<60){f=(b&c)|(b&d)|(c&d);k=0x8F1BBCDC;}else{f=b^c^d;k=0xCA62C1D6;}const t=(rotl(a,5)+f+e+k+(w[j]>>>0))>>>0;e=d;d=c;c=rotl(b,30)>>>0;b=a;a=t;}h0=(h0+a)>>>0;h1=(h1+b)>>>0;h2=(h2+c)>>>0;h3=(h3+d)>>>0;h4=(h4+e)>>>0;}
-      function hex(n){return("00000000"+n.toString(16)).slice(-8);} return hex(h0)+hex(h1)+hex(h2)+hex(h3)+hex(h4);
-    }
-    async function verifyPasscode(input){
-      const val = input.trim();
-      if(!val) return false;
-      if (val === OL_PLAIN) return true;
-      try{ if(await sha1WebCrypto(val)===OL_HASHED) return true; }catch(e){}
-      try{ if(sha1Fallback(val)===OL_HASHED) return true; }catch(e){}
-      return false;
-    }
-    function setAuth(minutes=180){
-      sessionStorage.setItem(OL_AUTH_KEY,"ok");
-      sessionStorage.setItem(OL_EXP_KEY, String(Date.now()+minutes*60*1000));
-      syncAuthUI();
-    }
-    function clearAuth(){
-      sessionStorage.removeItem(OL_AUTH_KEY);
-      sessionStorage.removeItem(OL_EXP_KEY);
-      syncAuthUI();
-    }
-    function isAuthed(){
-      const ok = sessionStorage.getItem(OL_AUTH_KEY)==="ok";
-      const exp = parseInt(sessionStorage.getItem(OL_EXP_KEY)||"0",10);
-      if(!ok || Date.now()>exp){
-        sessionStorage.removeItem(OL_AUTH_KEY);
-        sessionStorage.removeItem(OL_EXP_KEY);
-        return false;
-      }
-      return true;
-    }
-
-    const loginBtn = document.getElementById("olLoginBtn");
-    const logoutBtn = document.getElementById("olLogoutBtn");
-    const authStatus = document.getElementById("olAuthStatus");
-    const addBtn = document.getElementById("olAddBtn");
-    const loginDlg = document.getElementById("olLoginDialog");
-    const passInput = document.getElementById("olPass");
-    const loginMsg = document.getElementById("olLoginMsg");
-    const capsMsg = document.getElementById("olCapsMsg");
-    const loginGo = document.getElementById("olLoginGo");
-    const loginCancel = document.getElementById("olLoginCancel");
-
-    loginBtn.addEventListener("click", ()=>{
-      loginMsg.style.display="none";
-      capsMsg.style.display="none";
-      passInput.value="";
-      loginDlg.showModal();
-      passInput.focus();
-    });
-    loginCancel.addEventListener("click", ()=> loginDlg.close());
-    passInput.addEventListener("keydown",(e)=>{ const caps=e.getModifierState&&e.getModifierState("CapsLock"); capsMsg.style.display=caps?"block":"none"; });
-    passInput.addEventListener("input", ()=>{ loginMsg.style.display="none"; });
-    passInput.addEventListener("keypress",(e)=>{ if(e.key==="Enter"){ e.preventDefault(); loginGo.click(); }});
-    loginGo.addEventListener("click", async ()=>{
-      const ok = await verifyPasscode(passInput.value);
-      if (ok){ setAuth(180); loginDlg.close(); } else { loginMsg.style.display="block"; }
-    });
-    logoutBtn.addEventListener("click", ()=> clearAuth());
-    function syncAuthUI(){
-      const yes = isAuthed();
-      addBtn.disabled = !yes;
-      loginBtn.style.display = yes ? "none" : "inline-block";
-      logoutBtn.style.display = yes ? "inline-block" : "none";
-      authStatus.textContent = yes ? "Editing enabled." : "Read-only. Login to add/edit events.";
-      authStatus.style.color = yes ? "var(--ol-ok)" : "var(--ol-muted)";
-    }
-
-    /*****************************
-     *  ☁️ FIREBASE (shared data)
-     *****************************/
+    /************ Firebase (Realtime DB) ************/
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
+    import { getDatabase, ref, onChildAdded, onChildChanged, onChildRemoved, push, set, update, remove, serverTimestamp as rtdbServerTime } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 
-    // ✅ Your Firebase config (kept as you provided)
     const firebaseConfig = {
       apiKey: "AIzaSyBlZcyY2PuGNhbYN5BCkix18q5a80SgcE0",
       authDomain: "one1luv.firebaseapp.com",
       projectId: "one1luv",
+      databaseURL: "https://one1luv-default-rtdb.firebaseio.com",  /* ← default RTDB URL */
       storageBucket: "one1luv.firebasestorage.app",
       messagingSenderId: "831108789329",
       appId: "1:831108789329:web:90674d0824ceafee5e3470",
       measurementId: "G-4D883HBFXS"
     };
 
-    // Initialize Firebase (once)
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Ensure we have an authenticated session (Anonymous) so Firestore writes are allowed
+    const db = getDatabase(app);
     signInAnonymously(auth).catch(console.error);
+    onAuthStateChanged(auth, ()=> syncAuthUI());
 
-    /*****************************
-     *  📆 Calendar + Agenda
-     *****************************/
-    const calendarEl = document.getElementById('olCalendar');
-    const agendaTitle = document.getElementById('olAgendaTitle');
-    const agendaList = document.getElementById('olAgendaList');
+    /************ Calendar & Agenda ************/
+    const calendarEl=document.getElementById('olCalendar');
+    const agendaTitle=document.getElementById('olAgendaTitle');
+    const agendaList=document.getElementById('olAgendaList');
+    const lb=document.getElementById('olLightbox'), lbImg=document.getElementById('olLightboxImg'), lbThumbs=document.getElementById('olLightboxThumbs'), lbClose=document.getElementById('olLightboxClose');
+    lbClose.addEventListener('click',()=>lb.close());
 
-    const lb = document.getElementById('olLightbox');
-    const lbImg = document.getElementById('olLightboxImg');
-    const lbThumbs = document.getElementById('olLightboxThumbs');
-    const lbClose = document.getElementById('olLightboxClose');
-    lbClose.addEventListener('click', ()=> lb.close());
+    let selectedDate=new Date();
+    let currentEditEvent=null;
+    const eventsRef = ref(db,"events");
 
-    let selectedDate = new Date();
-    let currentEditEvent = null; // FullCalendar EventApi
-    const eventsCol = collection(db, "events");
-    const qEvents = query(eventsCol, orderBy("start"));
-
-    function formatDayTitle(d){
-      const now = new Date();
-      const same = d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
-      return same ? 'Today' : new Intl.DateTimeFormat(undefined,{weekday:'long', month:'long', day:'numeric', year:'numeric'}).format(d);
-    }
-
+    function formatDayTitle(d){const now=new Date();const same=d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();return same?'Today':new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(d)}
     function renderAgenda(date, events){
-      agendaTitle.textContent = formatDayTitle(date);
-      agendaList.innerHTML = '';
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth()+1).padStart(2,'0');
-      const dd = String(date.getDate()).padStart(2,'0');
-      const dayISO = `${yyyy}-${mm}-${dd}`;
-      const list = events
-        .filter(ev => (ev.startStr||'').slice(0,10)===dayISO)
-        .sort((a,b)=> (a.startStr||'').localeCompare(b.startStr||''));
-      if(list.length===0){
-        const el = document.createElement('div'); el.className='ol-event'; el.innerHTML='<div class="ol-event-time">—</div><div class="ol-event-title">No events</div>';
-        agendaList.appendChild(el); return;
-      }
+      agendaTitle.textContent=formatDayTitle(date); agendaList.innerHTML='';
+      const yyyy=date.getFullYear(), mm=String(date.getMonth()+1).padStart(2,'0'), dd=String(date.getDate()).padStart(2,'0'); const dayISO=`${yyyy}-${mm}-${dd}`;
+      const list=events.filter(ev=>(ev.startStr||'').slice(0,10)===dayISO).sort((a,b)=>(a.startStr||'').localeCompare(b.startStr||''));
+      if(!list.length){ const el=document.createElement('div'); el.className='ol-event'; el.innerHTML='<div class="ol-event-time">—</div><div class="ol-event-title">No events</div>'; agendaList.appendChild(el); return; }
       for(const ev of list){
-        const row = document.createElement('div'); row.className='ol-event';
-        const tm = document.createElement('div'); tm.className='ol-event-time';
-        tm.textContent = ev.start ? new Date(ev.start).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '';
-        const box = document.createElement('div');
-        const ttl = document.createElement('div'); ttl.className='ol-event-title'; ttl.textContent = ev.title || '(untitled)';
-        box.appendChild(ttl);
-        if(ev.extendedProps && ev.extendedProps.description){
-          const notes = document.createElement('div'); notes.style.color='var(--ol-muted)'; notes.textContent = ev.extendedProps.description; box.appendChild(notes);
-        }
-        const atts = (ev.extendedProps && ev.extendedProps.attachments) || [];
-        if(atts.length){
-          const wrap = document.createElement('div'); wrap.className='ol-thumbs';
-          atts.forEach((a,idx)=>{
-            const img = document.createElement('img');
-            img.src = a.dataUrl;
-            img.alt = a.name || ('Attachment '+(idx+1));
-            img.addEventListener('click', ()=> openLightbox(atts, idx));
-            wrap.appendChild(img);
-          });
-          box.appendChild(wrap);
-        }
+        const row=document.createElement('div'); row.className='ol-event';
+        const tm=document.createElement('div'); tm.className='ol-event-time'; tm.textContent=ev.start?new Date(ev.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
+        const box=document.createElement('div');
+        const ttl=document.createElement('div'); ttl.className='ol-event-title'; ttl.textContent=ev.title||'(untitled)'; box.appendChild(ttl);
+        if(ev.extendedProps && ev.extendedProps.description){ const notes=document.createElement('div'); notes.style.color='var(--ol-muted)'; notes.textContent=ev.extendedProps.description; box.appendChild(notes); }
+        const atts=(ev.extendedProps && ev.extendedProps.attachments)||[];
+        if(atts.length){ const wrap=document.createElement('div'); wrap.className='ol-thumbs'; atts.forEach((a,idx)=>{const img=document.createElement('img'); img.src=a.dataUrl; img.alt=a.name||('Attachment '+(idx+1)); img.addEventListener('click',()=>openLightbox(atts,idx)); wrap.appendChild(img)}); box.appendChild(wrap); }
         row.appendChild(tm); row.appendChild(box);
-        row.addEventListener('click', ()=>{ if(isAuthed()) openEdit(ev); });
+        row.addEventListener('click',()=>{ if(isAuthed()) openEdit(ev); });
         agendaList.appendChild(row);
       }
     }
-
-    function openLightbox(attachments, index=0){
-      if(!attachments || !attachments.length) return;
-      let cur = Math.max(0, Math.min(index, attachments.length-1));
-      function renderLB(){
-        lbImg.src = attachments[cur].dataUrl;
-        lbImg.alt = attachments[cur].name || 'Attachment';
-        lbThumbs.innerHTML = '';
-        attachments.forEach((a,i)=>{
-          const t = document.createElement('img');
-          t.src = a.dataUrl; t.alt = a.name || 'Attachment';
-          if(i===cur){ t.style.outline = '2px solid var(--ol-blue)'; t.style.outlineOffset='2px'; }
-          t.addEventListener('click', ()=>{ cur=i; renderLB(); });
-          lbThumbs.appendChild(t);
-        });
-      }
-      renderLB();
-      lb.showModal();
+    function openLightbox(attachments,index=0){
+      if(!attachments||!attachments.length) return; let cur=Math.max(0,Math.min(index,attachments.length-1));
+      function renderLB(){ lbImg.src=attachments[cur].dataUrl; lbImg.alt=attachments[cur].name||'Attachment'; lbThumbs.innerHTML=''; attachments.forEach((a,i)=>{const t=document.createElement('img'); t.src=a.dataUrl; t.alt=a.name||'Attachment'; if(i===cur){t.style.outline='2px solid var(--ol-blue)'; t.style.outlineOffset='2px'} t.addEventListener('click',()=>{cur=i;renderLB()}); lbThumbs.appendChild(t)}); }
+      renderLB(); lb.showModal();
     }
 
-    // Build FullCalendar
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      height: 'auto',
-      initialView: 'dayGridMonth',
-      fixedWeekCount: true,
-      headerToolbar: { left: 'prev,today,next', center: 'title', right: '' },
-      dayMaxEventRows: 3,
-      events: [], // Firestore will stream them in live
+    const calendar=new FullCalendar.Calendar(calendarEl,{
+      height:'auto', initialView:'dayGridMonth', fixedWeekCount:true,
+      headerToolbar:{left:'prev,today,next',center:'title',right:''},
+      dayMaxEventRows:3, events:[],
       eventContent(arg){
-        const hasAtt = ((arg.event.extendedProps && arg.event.extendedProps.attachments) || []).length > 0;
-        const safeTitle = document.createElement('div');
-        safeTitle.textContent = arg.event.title || '(untitled)';
-        const html = `
-          <span class="ol-evt">${safeTitle.textContent}</span>
-          ${hasAtt ? `<span class="ol-clip" title="View attachments" data-eid="${arg.event.id}">📎</span>` : ''}`;
-        return { html };
+        const hasAtt=((arg.event.extendedProps&&arg.event.extendedProps.attachments)||[]).length>0;
+        const safeTitle=document.createElement('div'); safeTitle.textContent=arg.event.title||'(untitled)';
+        return {html:`<span class="ol-evt">${safeTitle.textContent}</span>${hasAtt?`<span class="ol-clip" title="View attachments" data-eid="${arg.event.id}">📎</span>`:''}`};
       },
-      eventDidMount(){ queueMicrotask(()=>{ attachClipHandlers(); addDotRows(); }); },
-      datesSet(){ queueMicrotask(addDotRows); },
-      eventClick(info){
-        if(!isAuthed()){ return; }
-        if(info.jsEvent && (info.jsEvent.target.closest('.ol-clip'))) return;
-        openEdit(info.event);
-      },
+      eventDidMount(){queueMicrotask(()=>{attachClipHandlers();addDotRows()});},
+      datesSet(){queueMicrotask(addDotRows);},
+      eventClick(info){ if(!isAuthed()) return; if(info.jsEvent && info.jsEvent.target.closest('.ol-clip')) return; openEdit(info.event); },
       dateClick(info){
-        document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
-        info.dayEl.classList.add('ol-selected');
-        selectedDate = info.date;
-        renderAgenda(selectedDate, calendar.getEvents());
-        if(isAuthed()){ openAdd(selectedDate); }
+        document.querySelectorAll('.fc-daygrid-day').forEach(td=>td.classList.remove('ol-selected'));
+        info.dayEl.classList.add('ol-selected'); selectedDate=info.date; renderAgenda(selectedDate,calendar.getEvents()); if(isAuthed()) openAdd(selectedDate);
       }
     });
-
     calendar.render();
-
-    // Select today on load
-    const todayCell = calendarEl.querySelector('.fc-day-today');
-    if(todayCell){ todayCell.classList.add('ol-selected'); }
-    renderAgenda(selectedDate, calendar.getEvents());
-    syncAuthUI();
+    const todayCell=calendarEl.querySelector('.fc-day-today'); if(todayCell){todayCell.classList.add('ol-selected')}
+    renderAgenda(selectedDate,calendar.getEvents()); syncAuthUI();
 
     function addDotRows(){
       calendarEl.querySelectorAll('.fc-daygrid-day').forEach(td=>{
-        const old = td.querySelector('.ol-dotrow'); if(old) old.remove();
-        const dateStr = td.getAttribute('data-date');
-        const count = calendar.getEvents().filter(ev => (ev.startStr||'').slice(0,10)===dateStr).length;
-        const n = Math.min(3, count);
-        if(n>0){
-          const row = document.createElement('div'); row.className='ol-dotrow';
-          for(let i=0;i<n;i++){ const dot=document.createElement('div'); dot.className='ol-dot'; row.appendChild(dot); }
-          td.style.position='relative';
-          td.appendChild(row);
-        }
+        const old=td.querySelector('.ol-dotrow'); if(old) old.remove();
+        const dateStr=td.getAttribute('data-date');
+        const count=calendar.getEvents().filter(ev=>(ev.startStr||'').slice(0,10)===dateStr).length;
+        const n=Math.min(3,count); if(n>0){ const row=document.createElement('div'); row.className='ol-dotrow'; for(let i=0;i<n;i++){const dot=document.createElement('div'); dot.className='ol-dot'; row.appendChild(dot)} td.style.position='relative'; td.appendChild(row); }
       });
     }
     function attachClipHandlers(){
       calendarEl.querySelectorAll('.ol-clip').forEach(el=>{
-        el.onclick = (e)=>{
+        el.onclick=e=>{
           e.stopPropagation();
-          const id = el.getAttribute('data-eid');
-          const ev = calendar.getEventById(id);
-          const atts = (ev && ev.extendedProps && ev.extendedProps.attachments) || [];
-          if(atts.length){ openLightbox(atts, 0); }
+          const id=el.getAttribute('data-eid'); const ev=calendar.getEventById(id);
+          const atts=(ev && ev.extendedProps && ev.extendedProps.attachments)||[];
+          if(atts.length) openLightbox(atts,0);
         };
       });
     }
 
-    /************************************
-     * 🔄 LIVE SYNC (Firestore <-> UI)
-     ************************************/
-    const fcById = new Map(); // Firestore doc id -> FullCalendar EventApi
+    /************ LIVE SYNC (RTDB <-> UI) ************/
+    const fcById=new Map(); // key -> EventApi
 
-    onSnapshot(qEvents, (snap)=>{
-      snap.docChanges().forEach(change=>{
-        const d = { id: change.doc.id, ...change.doc.data() };
-        if(change.type === "added"){
-          if (!calendar.getEventById(d.id)) {
-            const evt = calendar.addEvent({
-              id: d.id, title: d.title, start: d.start, end: d.end || null,
-              extendedProps: { description: d.description || "", attachments: d.attachments || [] }
-            });
-            fcById.set(d.id, evt);
-          }
-        } else if(change.type === "modified"){
-          const evt = calendar.getEventById(d.id);
-          if(evt){
-            evt.setProp('title', d.title || '');
-            if (d.start) evt.setStart(d.start);
-            if (d.end)   evt.setEnd(d.end);
-            evt.setExtendedProp('description', d.description || "");
-            evt.setExtendedProp('attachments', d.attachments || []);
-          }
-        } else if(change.type === "removed"){
-          const evt = calendar.getEventById(d.id);
-          if(evt){ evt.remove(); fcById.delete(d.id); }
-        }
-      });
-      queueMicrotask(()=>{ addDotRows(); renderAgenda(selectedDate, calendar.getEvents()); });
+    onChildAdded(eventsRef,(snap)=>{
+      const id=snap.key; const d=snap.val()||{};
+      if(!calendar.getEventById(id)){
+        const evt=calendar.addEvent({ id, title:d.title||'', start:d.start||null, end:d.end||null, extendedProps:{ description:d.description||'', attachments:d.attachments||[] } });
+        fcById.set(id,evt);
+        queueMicrotask(()=>{addDotRows();renderAgenda(selectedDate,calendar.getEvents())});
+      }
+    });
+    onChildChanged(eventsRef,(snap)=>{
+      const id=snap.key; const d=snap.val()||{}; const evt=calendar.getEventById(id);
+      if(evt){
+        evt.setProp('title', d.title||'');
+        if(d.start) evt.setStart(d.start);
+        if(d.end) evt.setEnd(d.end);
+        evt.setExtendedProp('description', d.description||'');
+        evt.setExtendedProp('attachments', d.attachments||[]);
+        queueMicrotask(()=>{addDotRows();renderAgenda(selectedDate,calendar.getEvents())});
+      }
+    });
+    onChildRemoved(eventsRef,(snap)=>{
+      const id=snap.key; const evt=calendar.getEventById(id);
+      if(evt){ evt.remove(); fcById.delete(id); queueMicrotask(()=>{addDotRows();renderAgenda(selectedDate,calendar.getEvents())}); }
     });
 
-    /*****************************
-     * ➕ Add / ✏️ Edit dialog
-     *****************************/
-    const dlg = document.getElementById('olDialog');
-    const olEditingId = document.getElementById('olEditingId');
-    const olDate = document.getElementById('olDate');
-    const olTime = document.getElementById('olTime');
-    const olTitle = document.getElementById('olTitle');
-    const olNotes = document.getElementById('olNotes');
-    const olFiles = document.getElementById('olFiles');
-    const olPreview = document.getElementById('olPreview');
-    const olCancel = document.getElementById('olCancel');
-    const olSave = document.getElementById('olSave');
-    const olDelete = document.getElementById('olDelete');
-    const addBtnEl = document.getElementById('olAddBtn');
+    /************ Add / Edit dialog ************/
+    const dlg=document.getElementById('olDialog'), olEditingId=document.getElementById('olEditingId'), olDate=document.getElementById('olDate'), olTime=document.getElementById('olTime'), olTitle=document.getElementById('olTitle'), olNotes=document.getElementById('olNotes'), olFiles=document.getElementById('olFiles'), olPreview=document.getElementById('olPreview'), olCancel=document.getElementById('olCancel'), olSave=document.getElementById('olSave'), olDelete=document.getElementById('olDelete'), addBtnEl=document.getElementById('olAddBtn');
+    let stagedAttachments=[];
+    addBtnEl.addEventListener('click',()=>openAdd(selectedDate));
+    olCancel.addEventListener('click',()=>dlg.close());
 
-    let stagedAttachments = []; // {name, mime, dataUrl}
+    function toISODate(d){return d.toISOString().slice(0,10)}
+    function timeFromStartStr(s){ if(!s||s.length<11) return ''; const t=s.slice(11,16); return /^\d{2}:\d{2}$/.test(t)?t:'' }
+    function renderThumbs(){ olPreview.innerHTML=''; stagedAttachments.forEach((a,i)=>{const img=document.createElement('img'); img.src=a.dataUrl; img.alt=a.name||('Attachment '+(i+1)); img.title='Click to remove'; img.addEventListener('click',()=>{stagedAttachments.splice(i,1);renderThumbs()}); olPreview.appendChild(img)}) }
 
-    addBtnEl.addEventListener('click', ()=> openAdd(selectedDate));
-    olCancel.addEventListener('click', ()=> dlg.close());
-
-    function toISODate(d){ return d.toISOString().slice(0,10); }
-    function timeFromStartStr(startStr){
-      if(!startStr || startStr.length<11) return '';
-      const t = startStr.slice(11,16);
-      return /^\d{2}:\d{2}$/.test(t) ? t : '';
-    }
-
-    function renderThumbs(){
-      olPreview.innerHTML = '';
-      stagedAttachments.forEach((a,i)=>{
-        const img = document.createElement('img');
-        img.src = a.dataUrl; img.alt = a.name || ('Attachment '+(i+1));
-        img.title = "Click to remove";
-        img.addEventListener('click', ()=>{ stagedAttachments.splice(i,1); renderThumbs(); });
-        olPreview.appendChild(img);
+    function compressImage(file,maxSide=1280,quality=0.7){
+      return new Promise((resolve,reject)=>{
+        const reader=new FileReader(); reader.onload=()=>{ const img=new Image(); img.onload=()=>{ let {width,height}=img; const scale=Math.min(1,maxSide/Math.max(width,height)); width=Math.round(width*scale); height=Math.round(height*scale);
+          const canvas=document.createElement('canvas'); canvas.width=width; canvas.height=height; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,width,height);
+          const mime=file.type&&file.type.startsWith('image/')?file.type:'image/jpeg'; const dataUrl=canvas.toDataURL(mime,quality); resolve({name:file.name,mime,dataUrl}); };
+          img.onerror=reject; img.src=reader.result; }; reader.onerror=reject; reader.readAsDataURL(file);
       });
     }
-
-    function compressImage(file, maxSide=1280, quality=0.7){
-      return new Promise((resolve, reject)=>{
-        const reader = new FileReader();
-        reader.onload = ()=>{
-          const img = new Image();
-          img.onload = ()=>{
-            let { width, height } = img;
-            const scale = Math.min(1, maxSide / Math.max(width, height));
-            width = Math.round(width * scale);
-            height = Math.round(height * scale);
-            const canvas = document.createElement('canvas');
-            canvas.width = width; canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            const mime = file.type && file.type.startsWith('image/') ? file.type : 'image/jpeg';
-            const dataUrl = canvas.toDataURL(mime, quality);
-            resolve({ name: file.name, mime, dataUrl });
-          };
-          img.onerror = reject;
-          img.src = reader.result;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
     olFiles.addEventListener('change', async ()=>{
-      if(!olFiles.files || !olFiles.files.length) return;
-      const left = Math.max(0, 4 - stagedAttachments.length);
-      const slice = Array.from(olFiles.files).slice(0, left);
-      const adds = [];
-      for (const f of slice){
-        try { adds.push(await compressImage(f, 1280, 0.72)); } catch(e){ console.error(e); }
-      }
-      stagedAttachments.push(...adds);
-      renderThumbs();
-      olFiles.value = "";
+      if(!olFiles.files||!olFiles.files.length) return;
+      const left=Math.max(0,4-stagedAttachments.length); const slice=Array.from(olFiles.files).slice(0,left); const adds=[];
+      for(const f of slice){ try{ adds.push(await compressImage(f,1280,0.72)) }catch(e){ console.error(e) } }
+      stagedAttachments.push(...adds); renderThumbs(); olFiles.value="";
     });
 
     function openAdd(date){
       if(!isAuthed()){ loginBtn.click(); return; }
-      currentEditEvent = null;
-      olEditingId.value = '';
-      stagedAttachments = [];
-      renderThumbs();
-      olDate.value = toISODate(date);
-      olTime.value = '';
-      olTitle.value='';
-      olNotes.value='';
-      olDelete.style.display = 'none';
-      dlg.showModal();
+      currentEditEvent=null; olEditingId.value=''; stagedAttachments=[]; renderThumbs();
+      olDate.value=toISODate(date); olTime.value=''; olTitle.value=''; olNotes.value=''; olDelete.style.display='none'; dlg.showModal();
     }
-
     function openEdit(event){
       if(!isAuthed()){ loginBtn.click(); return; }
-      currentEditEvent = event;
-      olEditingId.value = event.id || '';
-      const startISO = event.startStr || (event.start ? event.start.toISOString() : '');
-      olDate.value = (startISO||'').slice(0,10);
-      olTime.value = timeFromStartStr(startISO);
-      olTitle.value = event.title || '';
-      olNotes.value = (event.extendedProps && event.extendedProps.description) || '';
-      stagedAttachments = ((event.extendedProps && event.extendedProps.attachments) || []).map(a=>({name:a.name||'', mime:a.mime||'', dataUrl:a.dataUrl}));
-      renderThumbs();
-      olDelete.style.display = 'inline-block';
-      dlg.showModal();
+      currentEditEvent=event; olEditingId.value=event.id||'';
+      const startISO=event.startStr||(event.start?event.start.toISOString():'');
+      olDate.value=(startISO||'').slice(0,10); olTime.value=timeFromStartStr(startISO);
+      olTitle.value=event.title||''; olNotes.value=(event.extendedProps && event.extendedProps.description)||'';
+      stagedAttachments=((event.extendedProps && event.extendedProps.attachments)||[]).map(a=>({name:a.name||'',mime:a.mime||'',dataUrl:a.dataUrl}));
+      renderThumbs(); olDelete.style.display='inline-block'; dlg.showModal();
     }
 
-    // Save (add or update) to Firestore
+    // Save (add/update) to Realtime DB
     olSave.addEventListener('click', async ()=>{
       if(!isAuthed()){ dlg.close(); loginBtn.click(); return; }
-      const date = olDate.value;
-      const title = olTitle.value.trim();
-      const time = olTime.value;
-      const notes = olNotes.value.trim();
-      if(!date || !title) return;
+      const date=olDate.value, title=olTitle.value.trim(), time=olTime.value, notes=olNotes.value.trim();
+      if(!date||!title) return;
       const start = time ? `${date}T${time}:00` : date;
 
       try{
         if(currentEditEvent){
-          const ref = doc(db, "events", currentEditEvent.id);
-          await updateDoc(ref, {
-            title, start, description: notes || "", attachments: stagedAttachments, updatedAt: serverTimestamp()
+          const id=currentEditEvent.id;
+          await update(ref(db, `events/${id}`), {
+            title, start, description: notes || "", attachments: stagedAttachments, updatedAt: (new Date()).toISOString()
           });
         } else {
-          await addDoc(eventsCol, {
+          const newRef = push(eventsRef);
+          await set(newRef, {
             title, start, description: notes || "", attachments: stagedAttachments,
-            createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+            createdAt: (new Date()).toISOString(), updatedAt: (new Date()).toISOString()
           });
         }
-      }catch(e){
-        alert("Save failed. Please try again.");
+      } catch(e){
+        alert("Save failed. Check Realtime Database is enabled and rules are published.");
         console.error(e);
       }
       dlg.close();
       calendar.gotoDate(date);
-      selectedDate = new Date(date + 'T00:00:00');
-      document.querySelectorAll('.fc-daygrid-day').forEach(td=> td.classList.remove('ol-selected'));
-      const target = document.querySelector(`.fc-daygrid-day[data-date="${date}"]`);
-      if(target){ target.classList.add('ol-selected'); }
+      selectedDate=new Date(date+'T00:00:00');
+      document.querySelectorAll('.fc-daygrid-day').forEach(td=>td.classList.remove('ol-selected'));
+      const target=document.querySelector(`.fc-daygrid-day[data-date="${date}"]`); if(target){target.classList.add('ol-selected')}
       renderAgenda(selectedDate, calendar.getEvents());
     });
 
-    // Delete from Firestore
-    const olDeleteBtn = document.getElementById('olDelete');
-    olDeleteBtn.addEventListener('click', async ()=>{
+    // Delete
+    document.getElementById('olDelete').addEventListener('click', async ()=>{
       if(!currentEditEvent) return;
-      try{
-        await deleteDoc(doc(db, "events", currentEditEvent.id));
-        currentEditEvent = null;
-        dlg.close();
-      }catch(e){
-        alert("Delete failed. Please try again.");
-        console.error(e);
-      }
+      try{ await remove(ref(db, `events/${currentEditEvent.id}`)); currentEditEvent=null; dlg.close(); }
+      catch(e){ alert("Delete failed."); console.error(e); }
     });
-
-    onAuthStateChanged(auth, ()=> syncAuthUI());
-
-    window.One1LuvCalendar = {
-      getAll: function(){
-        return calendar.getEvents().map(e=>({
-          id:e.id,title:e.title,start:e.startStr,end:e.endStr,
-          description:e.extendedProps && e.extendedProps.description,
-          attachments:e.extendedProps && e.extendedProps.attachments
-        }));
-      }
-    };
   </script>
 </body>
 </html>
