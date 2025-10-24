@@ -255,3 +255,44 @@ a.download-link {
   text-decoration: underline;
   margin-left: 5px;
 }
+/* --- Global header look & feel (One1Luv) --- */
+:root{
+  --ol-bg:#0b0d12;          /* deep black/blue background */
+  --ol-blue:#1e90ff;        /* One1Luv blue */
+  --ol-fg:#e8ecf2;          /* main text color */
+  --ol-muted:#98a3b6;       /* muted text */
+  --ol-chip:#151a22;        /* pill/bg */
+  --ol-grid:#232834;
+  --ol-shadow:0 10px 30px rgba(0,0,0,.45);
+}
+
+body{ background:var(--ol-bg); color:var(--ol-fg); margin:0; }
+
+.ol-site-header{
+  background:linear-gradient(0deg, rgba(14,18,26,.85), rgba(14,18,26,.85)), #000;
+  border-bottom:1px solid var(--ol-grid);
+  box-shadow:var(--ol-shadow);
+  position:sticky; top:0; z-index:1000;
+}
+.ol-header-inner{
+  max-width:1100px; margin:0 auto; padding:14px 16px;
+  display:flex; align-items:center; gap:16px;
+}
+.ol-brand{ margin:0; color:var(--ol-blue); font-weight:800; letter-spacing:.3px; }
+
+.ol-nav ul{
+  list-style:none; margin:0; padding:0; display:flex; gap:10px; flex-wrap:wrap;
+}
+.ol-nav a{
+  color:var(--ol-muted); text-decoration:none;
+  padding:8px 12px; border-radius:12px; background:transparent; display:inline-block;
+}
+.ol-nav a:hover, .ol-nav a.active{
+  background:var(--ol-chip); color:var(--ol-fg);
+}
+
+/* footer consistency (optional) */
+footer{
+  color:var(--ol-muted); text-align:center; padding:24px 16px;
+  border-top:1px solid var(--ol-grid);
+}
