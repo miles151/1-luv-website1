@@ -1,165 +1,53 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-  <title>One1Luv MC Phoenix — Home</title>
-
-  <!-- Global site styles -->
-  <link rel="stylesheet" href="/style.css" />
-
-  <!-- Page styles (only what we need for the header/logo sizing).
-       If you prefer, move this <style> block into /style.css. -->
-  <style>
-    /* ===== Brand sizing (logo vs. title) ===== */
-    :root{
-      --brand-title-size: clamp(22px, 4vw, 28px);
-    }
-
-    /* Header shell */
-    .ol-site-header{
-      background: var(--ol-bg, #0b0f16);
-      border-bottom: 1px solid var(--ol-grid, #222a36);
-      padding: 10px 16px;
-    }
-
-    .ol-header-inner{
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      justify-content: space-between;
-    }
-
-    /* Brand row (logo + text) */
-    .ol-brand{
-      display: inline-flex;
-      align-items: center;
-      gap: 14px;
-      font-size: var(--brand-title-size); /* controls title size */
-      line-height: 1;
-      margin: 0;
-    }
-
-    /* 5× larger logo than the title text */
-    .site-logo{
-      height: calc(5 * var(--brand-title-size)); /* 5x the text */
-      width: auto;
-      display: inline-block;
-      object-fit: contain;
-    }
-
-    /* Title text next to the logo */
-    .brand-title{
-      color: var(--ol-blue, #1e90ff);
-      font-weight: 800;
-      letter-spacing: 0.3px;
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    /* Basic nav alignment (keeps your existing vibe) */
-    .ol-nav ul{
-      list-style: none;
-      display: flex;
-      gap: 8px;
-      margin: 0;
-      padding: 0;
-    }
-    .ol-nav a{
-      color: var(--ol-muted, #98a3b6);
-      text-decoration: none;
-      padding: 8px 12px;
-      border-radius: 12px;
-    }
-    .ol-nav a:hover, .ol-nav a.active{
-      background: var(--ol-chip, #151a22);
-      color: var(--ol-fg, #e8ecf2);
-    }
-
-    /* Mobile: keep the header tidy */
-    @media (max-width: 600px){
-      .site-logo{ height: calc(3 * var(--brand-title-size)); }
-      .ol-header-inner{ gap: 16px; }
-    }
-
-    /* Simple hero just so the page looks complete */
-    .hero {
-      max-width: 1100px;
-      margin: 24px auto;
-      padding: 0 16px;
-      color: var(--ol-fg, #e8ecf2);
-    }
-    .hero h2 {
-      margin: 0 0 8px 0;
-      font-size: clamp(28px, 6vw, 40px);
-      color: var(--ol-blue, #1e90ff);
-    }
-    .hero p {
-      color: var(--ol-muted, #98a3b6);
-      max-width: 65ch;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+@@ -9,40 +8,41 @@
+  <!-- Local CSS -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- ===== Shared header (inline for index so it “just works”) ===== -->
-  <header class="ol-site-header">
-    <div class="ol-header-inner">
-      <!-- Brand: logo before title -->
-      <h1 class="ol-brand">
-        <img
-          src="/images/oneluvlogo3.png"
-          alt="One1Luv MC Phoenix logo"
-          class="site-logo"
-          decoding="async"
-          fetchpriority="high"
-        />
-        <a href="/index.html" class="brand-title">One1Luv MC Phoenix</a>
-      </h1>
-
-      <!-- Nav -->
-      <nav class="ol-nav">
-        <ul>
-          <li><a class="active" href="/index.html">Home</a></li>
-          <li><a href="/pages/about.html">About Us</a></li>
-          <li><a href="/pages/services.html">Services</a></li>
-          <li><a href="/pages/gallery.html">Gallery</a></li>
-          <li><a href="/pages/sponsors.html">Sponsors &amp; Charities</a></li>
-          <li><a href="/pages/store.html">Store</a></li>
-          <li><a href="/pages/events.html">Events</a></li>
-        </ul>
-      </nav>
-    </div>
+  <header>
+    <h1>One1LuvMCPhoenix </h1>
+    <h1 class="brand">
+      <span class="brand-logo-fallback" aria-hidden="true"></span>
+      <span class="brand-title">One1Luv MC Phoenix</span>
+    </h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="/pages/about.html">About Us</a></li>
+        <li><a href="/pages/services.html">Services</a></li>
+        <li><a href="/pages/gallery.html">Gallery</a></li>
+        <li><a href="/pages/sponsors.html">Sponsors & Charities</a></li>
+        <li><a href="/pages/sponsors.html">Sponsors &amp; Charities</a></li>
+        <li><a href="/pages/store.html">Store</a></li>
+        <li><a href="/pages/events.html" target="_blank">Events</a></li>
+        <li><a href="/pages/events.html" target="_blank" rel="noopener">Events</a></li>
+      </ul>
+    </nav>
   </header>
 
-  <!-- ===== Main content ===== -->
-  <main>
-    <section class="hero">
-      <h2>Welcome to One1Luv MC Phoenix</h2>
-      <p>
-        Brotherhood. Community. Miles together. Check the Events page for rides and
-        meetups, browse the Gallery, and learn more about our sponsors and charities.
-      </p>
-    </section>
+  <section class="hero">
+    <h2>One Love for All Riders </h2>
 
-    <!-- Your existing homepage sections can follow here -->
-  </main>
+    <p>Representing unity and the thrill of the ride for bikers across the globe.</p>
+    <img src="images/The crew.jpg" alt="One1Luv riders together" class="hero-img" loading="lazy">
+  </section>
 
-  <!-- ===== Footer (optional placeholder to match your site) ===== -->
-  <footer class="ol-footer" style="border-top:1px solid var(--ol-grid,#222a36); padding:24px 16px; margin-top:48px;">
-    <div style="max-width:1100px; margin:0 auto; color:var(--ol-muted,#98a3b6);">
-      © <span id="year"></span> One1Luv MC Phoenix — All Rights Reserved
-    </div>
+  <section class="welcome">
+    <h2>Welcome to Our Club</h2>
+    <p>We ride together, we live free, and we embrace all motorcycle cultures.</p>
+    <p>He's my brother. He Ain't Heavy.</p>
+    <img src="images/HEAINTHEAVYblackandwhitefile.jpg" alt="Graffiti Art" class="graffiti">
+    <p>Art work by Gilbert Young.</p>
+    
+  </section>
+    
+  <footer>
+    <p>&copy; 2025 One1LuvMCPhoenix. All Rights Reserved.</p>
   </footer>
-
-  <script>
-    // Update year in footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
 </body>
 </html>
