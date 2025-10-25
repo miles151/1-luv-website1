@@ -45,6 +45,76 @@ body {
   margin: 0 auto;
 }
 
+/* ===== Brand sizing (logo vs. title) ===== */
+:root{
+  /* Title font size used in the header text */
+  --brand-title-size: clamp(22px, 4vw, 28px);
+}
+
+/* Header shell (optional, keeps things neat) */
+.ol-site-header{
+  background: var(--ol-bg);
+  border-bottom: 1px solid var(--ol-grid, #222a36);
+  padding: 10px 16px;
+}
+
+.ol-header-inner{
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  justify-content: space-between;
+}
+
+/* Brand row (logo + text) */
+.ol-brand{
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: var(--brand-title-size); /* drives the text size */
+  line-height: 1;
+  margin: 0;
+}
+
+/* 5× larger logo than the title text */
+.site-logo{
+  height: calc(5 * var(--brand-title-size)); /* 5x the text */
+  width: auto;
+  display: inline-block;
+  object-fit: contain;
+}
+
+/* Title text color/weight next to the logo */
+.brand-title{
+  color: var(--ol-blue, #1e90ff);
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+}
+
+/* Basic nav alignment (keeps your existing styles) */
+.ol-nav ul{
+  list-style: none;
+  display: flex;
+  gap: 8px;
+}
+.ol-nav a{
+  color: var(--ol-muted, #98a3b6);
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+.ol-nav a:hover, .ol-nav a.active{
+  background: var(--ol-chip, #151a22);
+  color: var(--ol-fg, #e8ecf2);
+}
+
+/* Mobile: shrink the logo a bit so it fits */
+@media (max-width: 600px){
+  .site-logo{ height: calc(3 * var(--brand-title-size)); }
+}
+
 /* =========================
    Header & Navigation
 ========================= */
@@ -79,7 +149,7 @@ header h1 {
   width:  calc(var(--brand-logo-size) * var(--brand-logo-scale));
 
   /* Use a root-relative path and correct file extension */
-  background-image: url("/images/oneluvlogo2.png");
+  background-image: url("/images/oneluvlogo3.PNG");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
