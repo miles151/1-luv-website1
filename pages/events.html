@@ -11,17 +11,52 @@
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 
   <style>
-    :root{ --ol-bg:#0b0d12; --ol-surface:#0f1218; --ol-fg:#e8ecf2; --ol-muted:#98a3b6; --ol-blue:#1e90ff; --ol-blue-2:#69b6ff; --ol-grid:#232834; --ol-chip:#151a22; --ol-shadow:0 10px 30px rgba(0,0,0,.45); --ol-danger:#ff4d4f; --ol-ok:#22c55e; }
-    body{background:var(--ol-bg);color:var(--ol-fg);font:16px system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;margin:0}
-    header{padding:12px 16px} header h1{margin:0;color:var(--ol-blue)}
+    :root{
+      --ol-bg:#0b0d12; --ol-surface:#0f1218; --ol-fg:#e8ecf2; --ol-muted:#98a3b6;
+      --ol-blue:#1e90ff; --ol-blue-2:#69b6ff; --ol-grid:#232834; --ol-chip:#151a22;
+      --ol-shadow:0 10px 30px rgba(0,0,0,.45); --ol-danger:#ff4d4f; --ol-ok:#22c55e;
+
+      /* Logo sizing & “silverizing” for NON-transparent PNG */
+      --brand-logo-size: 1em;          /* relative to the H1 font-size */
+      --brand-logo-brightness: 1.35;   /* increase if logo looks too dark */
+      --brand-logo-contrast: 1.15;     /* increase for more punch */
+    }
+
+    body{background:var(--ol-bg);color:var(--ol-fg);
+      font:16px system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;margin:0}
+
+    /* ----- HEADER (updated with logo before title) ----- */
+    header{padding:12px 16px}
+    header h1{margin:0;color:var(--ol-blue); font-size:28px}
+
+    /* Brand block: logo + text */
+    .brand{display:inline-flex; align-items:center; gap:10px; line-height:1}
+    .brand-logo-fallback{
+      display:inline-block;
+      width: calc(var(--brand-logo-size) * 1.1);
+      height: var(--brand-logo-size);
+      background-image:url("images/oneluvlogo2.png");
+      background-position:center;
+      background-repeat:no-repeat;
+      background-size:contain;
+      filter: grayscale(1)
+              brightness(var(--brand-logo-brightness))
+              contrast(var(--brand-logo-contrast));
+      mix-blend-mode: screen;
+      opacity:.95;
+    }
+    .brand-title{ font-weight:800; letter-spacing:.3px }
+
     nav ul{list-style:none;margin:8px 0 0;padding:0;display:flex;gap:10px;flex-wrap:wrap}
     nav a{color:var(--ol-muted);text-decoration:none;padding:6px 10px;border-radius:10px}
     nav a.active, nav a:hover{background:var(--ol-chip);color:var(--ol-fg)}
+
     .ol-wrap{max-width:1100px;margin:16px auto 40px;padding:0 16px}
     .ol-authbar{display:flex;justify-content:flex-end;gap:8px;margin:8px 0 12px}
     .btn{border:1px solid var(--ol-grid);background:var(--ol-chip);color:var(--ol-fg);padding:8px 12px;border-radius:12px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .btn.primary{background:var(--ol-blue);border-color:transparent;color:#fff}
     .btn.warn{background:#1b1b1b;color:#fff;border-color:#333}
+
     .fc .fc-toolbar.fc-header-toolbar{margin:8px 0 6px}
     .fc .fc-toolbar-title{font-size:28px;font-weight:800;letter-spacing:.3px}
     .fc .fc-button{border:none;background:var(--ol-chip);color:var(--ol-fg);box-shadow:var(--ol-shadow);border-radius:14px;padding:8px 12px}
@@ -35,8 +70,10 @@
     .fc .ol-selected .fc-daygrid-day-number{background:var(--ol-blue);color:#fff}
     .fc .ol-dotrow{display:flex;gap:4px;position:absolute;left:6px;bottom:6px}
     .fc .ol-dot{width:6px;height:6px;border-radius:999px;background:var(--ol-blue);opacity:.9}
+
     .ol-evt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;display:inline-block;vertical-align:middle}
     .ol-clip{margin-left:6px;cursor:pointer;vertical-align:middle;user-select:none}
+
     .ol-agenda{margin-top:14px;background:var(--ol-surface);border:1px solid var(--ol-grid);border-radius:16px;padding:10px 12px;box-shadow:var(--ol-shadow)}
     .ol-agenda h3{margin:2px 0 8px 0;font-size:14px;color:var(--ol-muted);font-weight:700}
     .ol-event{background:var(--ol-chip);border:1px solid var(--ol-grid);border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;gap:10px;align-items:center}
@@ -44,8 +81,10 @@
     .ol-event-title{font-weight:700}
     .ol-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
     .ol-thumbs img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
+
     .ol-fab{position:fixed;right:16px;bottom:20px;width:56px;height:56px;border:none;border-radius:999px;background:var(--ol-blue);color:#fff;font-size:26px;cursor:pointer;box-shadow:var(--ol-shadow)}
     .ol-fab[disabled]{opacity:.55;cursor:not-allowed;filter:grayscale(40%)}
+
     dialog{border:none;border-radius:16px;box-shadow:var(--ol-shadow);background:var(--ol-surface);color:var(--ol-fg);width:min(560px,92vw)}
     dialog::backdrop{background:rgba(0,0,0,.35)}
     form.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
@@ -54,16 +93,27 @@
     .actions{display:flex;justify-content:space-between;gap:8px;padding:0 14px 14px}
     .actions .primary{background:var(--ol-blue);border-color:transparent}
     .actions .danger{background:var(--ol-danger);border-color:transparent}
+
     #olLightbox{width:min(900px,96vw)} .ol-lightbox-body{padding:12px}
     .ol-lightbox-img{width:100%;height:auto;border-radius:12px;border:1px solid var(--ol-grid)}
     .ol-lightbox-thumbs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
     .ol-lightbox-thumbs img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--ol-grid);cursor:pointer}
-    @media (max-width:640px){ .fc .fc-toolbar-title{font-size:22px} .fc .fc-daygrid-day-number{width:28px;height:28px} .ol-event{flex-direction:column;align-items:flex-start} .ol-event-time{min-width:unset} form.row{grid-template-columns:1fr} }
+
+    @media (max-width:640px){
+      .fc .fc-toolbar-title{font-size:22px}
+      .fc .fc-daygrid-day-number{width:28px;height:28px}
+      .ol-event{flex-direction:column;align-items:flex-start}
+      .ol-event-time{min-width:unset}
+      form.row{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>One1LuvMCPhoenix</h1>
+    <h1 class="brand">
+      <span class="brand-logo-fallback" aria-hidden="true"></span>
+      <span class="brand-title">One1Luv MC Phoenix</span>
+    </h1>
     <nav>
       <ul>
         <li><a href="/index.html">Home</a></li>
@@ -172,13 +222,13 @@
     /************ Firebase (Realtime DB) ************/
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-    import { getDatabase, ref, onChildAdded, onChildChanged, onChildRemoved, push, set, update, remove, serverTimestamp as rtdbServerTime } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+    import { getDatabase, ref, onChildAdded, onChildChanged, onChildRemoved, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBlZcyY2PuGNhbYN5BCkix18q5a80SgcE0",
       authDomain: "one1luv.firebaseapp.com",
       projectId: "one1luv",
-      databaseURL: "https://one1luv-default-rtdb.firebaseio.com",  /* ← default RTDB URL */
+      databaseURL: "https://one1luv-default-rtdb.firebaseio.com",
       storageBucket: "one1luv.firebasestorage.app",
       messagingSenderId: "831108789329",
       appId: "1:831108789329:web:90674d0824ceafee5e3470",
@@ -202,20 +252,32 @@
     let currentEditEvent=null;
     const eventsRef = ref(db,"events");
 
-    function formatDayTitle(d){const now=new Date();const same=d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();return same?'Today':new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(d)}
+    function formatDayTitle(d){
+      const now=new Date();
+      const same=d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+      return same?'Today':new Intl.DateTimeFormat(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(d)
+    }
     function renderAgenda(date, events){
       agendaTitle.textContent=formatDayTitle(date); agendaList.innerHTML='';
       const yyyy=date.getFullYear(), mm=String(date.getMonth()+1).padStart(2,'0'), dd=String(date.getDate()).padStart(2,'0'); const dayISO=`${yyyy}-${mm}-${dd}`;
       const list=events.filter(ev=>(ev.startStr||'').slice(0,10)===dayISO).sort((a,b)=>(a.startStr||'').localeCompare(b.startStr||''));
-      if(!list.length){ const el=document.createElement('div'); el.className='ol-event'; el.innerHTML='<div class="ol-event-time">—</div><div class="ol-event-title">No events</div>'; agendaList.appendChild(el); return; }
+      if(!list.length){
+        const el=document.createElement('div'); el.className='ol-event'; el.innerHTML='<div class="ol-event-time">—</div><div class="ol-event-title">No events</div>';
+        agendaList.appendChild(el); return;
+      }
       for(const ev of list){
         const row=document.createElement('div'); row.className='ol-event';
-        const tm=document.createElement('div'); tm.className='ol-event-time'; tm.textContent=ev.start?new Date(ev.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
+        const tm=document.createElement('div'); tm.className='ol-event-time';
+        tm.textContent=ev.start?new Date(ev.start).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}):'';
         const box=document.createElement('div');
         const ttl=document.createElement('div'); ttl.className='ol-event-title'; ttl.textContent=ev.title||'(untitled)'; box.appendChild(ttl);
         if(ev.extendedProps && ev.extendedProps.description){ const notes=document.createElement('div'); notes.style.color='var(--ol-muted)'; notes.textContent=ev.extendedProps.description; box.appendChild(notes); }
         const atts=(ev.extendedProps && ev.extendedProps.attachments)||[];
-        if(atts.length){ const wrap=document.createElement('div'); wrap.className='ol-thumbs'; atts.forEach((a,idx)=>{const img=document.createElement('img'); img.src=a.dataUrl; img.alt=a.name||('Attachment '+(idx+1)); img.addEventListener('click',()=>openLightbox(atts,idx)); wrap.appendChild(img)}); box.appendChild(wrap); }
+        if(atts.length){
+          const wrap=document.createElement('div'); wrap.className='ol-thumbs';
+          atts.forEach((a,idx)=>{const img=document.createElement('img'); img.src=a.dataUrl; img.alt=a.name||('Attachment '+(idx+1)); img.addEventListener('click',()=>openLightbox(atts,idx)); wrap.appendChild(img)});
+          box.appendChild(wrap);
+        }
         row.appendChild(tm); row.appendChild(box);
         row.addEventListener('click',()=>{ if(isAuthed()) openEdit(ev); });
         agendaList.appendChild(row);
@@ -223,7 +285,15 @@
     }
     function openLightbox(attachments,index=0){
       if(!attachments||!attachments.length) return; let cur=Math.max(0,Math.min(index,attachments.length-1));
-      function renderLB(){ lbImg.src=attachments[cur].dataUrl; lbImg.alt=attachments[cur].name||'Attachment'; lbThumbs.innerHTML=''; attachments.forEach((a,i)=>{const t=document.createElement('img'); t.src=a.dataUrl; t.alt=a.name||'Attachment'; if(i===cur){t.style.outline='2px solid var(--ol-blue)'; t.style.outlineOffset='2px'} t.addEventListener('click',()=>{cur=i;renderLB()}); lbThumbs.appendChild(t)}); }
+      function renderLB(){
+        lbImg.src=attachments[cur].dataUrl; lbImg.alt=attachments[cur].name||'Attachment';
+        lbThumbs.innerHTML='';
+        attachments.forEach((a,i)=>{
+          const t=document.createElement('img'); t.src=a.dataUrl; t.alt=a.name||'Attachment';
+          if(i===cur){t.style.outline='2px solid var(--ol-blue)'; t.style.outlineOffset='2px'}
+          t.addEventListener('click',()=>{cur=i;renderLB()}); lbThumbs.appendChild(t)
+        });
+      }
       renderLB(); lb.showModal();
     }
 
@@ -253,7 +323,11 @@
         const old=td.querySelector('.ol-dotrow'); if(old) old.remove();
         const dateStr=td.getAttribute('data-date');
         const count=calendar.getEvents().filter(ev=>(ev.startStr||'').slice(0,10)===dateStr).length;
-        const n=Math.min(3,count); if(n>0){ const row=document.createElement('div'); row.className='ol-dotrow'; for(let i=0;i<n;i++){const dot=document.createElement('div'); dot.className='ol-dot'; row.appendChild(dot)} td.style.position='relative'; td.appendChild(row); }
+        const n=Math.min(3,count); if(n>0){
+          const row=document.createElement('div'); row.className='ol-dotrow';
+          for(let i=0;i<n;i++){const dot=document.createElement('div'); dot.className='ol-dot'; row.appendChild(dot)}
+          td.style.position='relative'; td.appendChild(row);
+        }
       });
     }
     function attachClipHandlers(){
