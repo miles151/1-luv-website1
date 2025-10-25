@@ -2,19 +2,25 @@
 <!-- 
   DOCSTRING: header.html
   Purpose:
-    - Provides a reusable header with navigation menu
-    - Dynamically loaded on all pages using JavaScript
+    - Reusable site header with logo + title + navigation
+    - Loaded on all pages (via your JS include or server include)
 -->
 
 <header>
-  <h1>One1LuvMCPhoenix</h1>
+  <h1 class="brand">
+    <!-- Logo before the title (non-transparent PNG “silverized” via CSS) -->
+    <span class="brand-logo-fallback" aria-hidden="true"></span>
+    <!-- Make the title clickable to Home -->
+    <a href="/index.html" class="brand-title">One1Luv MC Phoenix</a>
+  </h1>
+
   <nav>
     <ul>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="/index.html">Home</a></li>
       <li><a href="/pages/about.html">About Us</a></li>
       <li><a href="/pages/services.html">Services</a></li>
       <li><a href="/pages/gallery.html">Gallery</a></li>
-      <li><a href="/pages/sponsors.html">Sponsors & Charities</a></li>
+      <li><a href="/pages/sponsors.html">Sponsors &amp; Charities</a></li>
       <li><a href="/pages/store.html">Store</a></li>
       <li><a href="/pages/events.html">Events</a></li>
     </ul>

@@ -7,9 +7,30 @@
   padding: 0;
 }
 
+:root{
+  /* Your site palette */
+  --ol-bg:#0b0d12;          /* deep black/blue background */
+  --ol-blue:#1e90ff;        /* One1Luv blue */
+  --ol-fg:#e8ecf2;          /* main text color */
+  --ol-muted:#98a3b6;       /* muted text */
+  --ol-chip:#151a22;        /* pill/bg */
+  --ol-grid:#232834;
+  --ol-shadow:0 10px 30px rgba(0,0,0,.45);
+
+  /* Header silver/gray target (matches your page text) */
+  --ol-silver:#dcdcdc;
+
+  /* ===== Brand Logo sizing & filter strength ===== */
+  /* 1em = height of the H1 text; we multiply it by 3 below */
+  --brand-logo-size: 1em;          /* base size tied to header font */
+  --brand-logo-scale: 3;           /* make logo 3x the header font height */
+  --brand-logo-brightness: 1.55;   /* raise if logo looks too dark */
+  --brand-logo-contrast: 1.25;     /* raise for more punch */
+}
+
 body {
-  background-color: #000;
-  color: #dcdcdc; /* Fluorescent Gray */
+  background-color: #000; /* keep your original */
+  color: #dcdcdc;         /* Fluorescent Gray */
   font-family: 'Arial', sans-serif;
   display: flex;
   flex-direction: column;
@@ -40,6 +61,56 @@ header h1 {
   letter-spacing: 1px;
 }
 
+/* ===== Brand Logo (non-transparent PNG) =====
+   - Shows your image and applies filters to approximate --ol-silver
+*/
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* The logo sits before the title text */
+.brand-logo-fallback {
+  display: inline-block;
+
+  /* EXACT SIZE: 3x the header font height */
+  height: calc(var(--brand-logo-size) * var(--brand-logo-scale));
+  width:  calc(var(--brand-logo-size) * var(--brand-logo-scale));
+
+  /* Use a root-relative path and correct file extension */
+  background-image: url("/images/oneluvlogo2.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  /* Silverize the graphic */
+  filter:
+    grayscale(1)
+    brightness(var(--brand-logo-brightness))
+    contrast(var(--brand-logo-contrast));
+
+  /* Optional blend; comment in if you like the brighter look */
+  /* mix-blend-mode: screen; */
+  /* opacity: 0.95; */
+}
+
+/* Title text next to the logo */
+.brand-title {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  /* inherits the h1 blue; if you want the title text silver too, uncomment: */
+  /* color: var(--ol-silver); */
+}
+
+/* Small screens: reduce overall logo scale so it fits */
+@media (max-width: 480px){
+  .brand { --brand-logo-scale: 2; }
+}
+
+/* =========================
+   Navigation
+========================= */
 nav ul {
   list-style: none;
   padding: 0;
@@ -255,17 +326,8 @@ a.download-link {
   text-decoration: underline;
   margin-left: 5px;
 }
-/* --- Global header look & feel (One1Luv) --- */
-:root{
-  --ol-bg:#0b0d12;          /* deep black/blue background */
-  --ol-blue:#1e90ff;        /* One1Luv blue */
-  --ol-fg:#e8ecf2;          /* main text color */
-  --ol-muted:#98a3b6;       /* muted text */
-  --ol-chip:#151a22;        /* pill/bg */
-  --ol-grid:#232834;
-  --ol-shadow:0 10px 30px rgba(0,0,0,.45);
-}
 
+/* --- Global header look & feel (One1Luv optional extras) --- */
 body{ background:var(--ol-bg); color:var(--ol-fg); margin:0; }
 
 .ol-site-header{

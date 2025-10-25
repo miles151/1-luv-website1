@@ -4,39 +4,195 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gallery - One1LuvMCPhoenix</title>
+
+  <!-- Global + page styles -->
   <link rel="stylesheet" href="/style.css" />
   <link rel="stylesheet" href="/styling/gallery.css" />
+
+  <style>
+    /* --- Lightbox styles (minimal, blends with your theme) --- */
+    dialog#glLightbox {
+      border: none;
+      padding: 0;
+      width: min(96vw, 1100px);
+      background: transparent;
+    }
+    dialog#glLightbox::backdrop {
+      background: rgba(0,0,0,.82);
+      backdrop-filter: blur(2px);
+    }
+    .gl-frame {
+      position: relative;
+      background: #0f1218;
+      border: 1px solid #232834;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45);
+    }
+    .gl-media {
+      display: grid;
+      place-items: center;
+      background: #0b0d12;
+      max-height: 78vh;
+    }
+    .gl-media img {
+      width: 100%;
+      height: auto;
+      max-height: 78vh;
+      object-fit: contain;
+      display: block;
+      background: #0b0d12;
+    }
+    .gl-caption {
+      padding: 10px 14px;
+      color: #98a3b6;
+      font-size: 0.95rem;
+      border-top: 1px solid #232834;
+      background: #0f1218;
+    }
+    .gl-actions {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none; /* buttons re-enable below */
+    }
+    .gl-btn {
+      pointer-events: auto;
+      border: none;
+      border-radius: 999px;
+      width: 44px;
+      height: 44px;
+      margin: 8px;
+      background: rgba(21,26,34,.8);
+      color: #e8ecf2;
+      font-size: 22px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,.45);
+      transition: transform .08s ease;
+    }
+    .gl-btn:hover { transform: scale(1.06); }
+    .gl-btn:active { transform: scale(0.98); }
+
+    .gl-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+    }
+
+    @media (max-width: 640px){
+      .gl-btn { width: 40px; height: 40px; font-size: 20px; }
+    }
+  </style>
+
   <!-- DOCSTRING: /pages/gallery.html -->
 </head>
 <body>
+  <!-- Shared header renders here (logo before title via /scripts/header.js) -->
   <div id="site-header"></div>
 
   <main class="main-content">
     <section class="welcome">
       <h2>Our Gallery</h2>
       <p>Check out some of our favorite rides and events!</p>
-      <div class="gallery-grid">
-        <img src="/images/image0.jpeg" alt="pictures of guys with Deuce that shit">
-        <img src="/images/1775059905914436916.JPG" alt="Big Wheel Bagger 2">
-        <img src="/images/image000002.JPG" alt="Racing Style Bagger">
-        <img src="/images/image1.jpeg" alt="guys on bikes">
-        <img src="/images/image3.jpeg" alt="hanging out">
-        <img src="/images/image2.jpeg" alt="Club Event 2">
-        <img src="/images/image4.jpeg" alt="Club Event 3">
-        <img src="/images/IMG_1645.jpg" alt="Club Event 4">
-        <img src="/images/IMG_1811.jpg" alt="Club Event 5">
-        <img src="/images/IMG_1888.jpg" alt="Club Event 6">
-        <img src="/images/IMG_1816.jpg" alt="Club Event 7">
-        <img src="/images/image11.jpeg" alt="Club Event 8">
-      </div>
-    </section>
-  </main>
+
+      <div class="gallery-grid" id="glGrid">
+        <img src="/images/image0.jpeg" alt="Guys with Deuce" loading="lazy">
+        <img src="/images/1775059905914436916.JPG" alt="Big Wheel Bagger 2" loading="lazy">
+        <img src="/images/image000002.JPG" alt="Racing Style Bagger" loading="lazy">
+        <img src="/images/image1.jpeg" alt="Group ride" loading="lazy">
+        <img src="/images/image3.jpeg" alt="Hanging out" loading="lazy">
+        <img src="/images/image2.jpeg" alt="Club Event 2" loading="lazy">
+        <img src="/images/image4.jpeg" alt="Club Event 3" loading="lazy">
+        <img src="/images/IMG_1645.jpg" alt="Club Event 4" loading="lazy">
+        <img src="/images/IMG_1811.jpg" alt="Club Event 5" loading="lazy">
+        <img src="/images/IMG_1888.jpg" alt="Club Event 6" loading="lazy">
+        <img src="/images/IMG_1816.jpg" alt="Club Event 7" loading="lazy">
+        <img src="/images/image11.jpeg" alt="Club Event 8" loading="lazy">
       </div>
     </section>
   </main>
 
+  <!-- Lightbox -->
+  <dialog id="glLightbox">
+    <div class="gl-frame">
+      <button class="gl-btn gl-close" id="glClose" title="Close" aria-label="Close">✕</button>
+      <div class="gl-actions">
+        <button class="gl-btn" id="glPrev" title="Previous image" aria-label="Previous">❮</button>
+        <button class="gl-btn" id="glNext" title="Next image" aria-label="Next">❯</button>
+      </div>
+      <div class="gl-media">
+        <img id="glImg" alt="">
+      </div>
+      <div class="gl-caption" id="glCap"></div>
+    </div>
+  </dialog>
 
   <footer>&copy; 2025 One1LuvMCPhoenix. All rights reserved.</footer>
+
+  <!-- Shared header builder (includes brand logo + title + nav) -->
   <script src="/scripts/header.js" defer></script>
+
+  <script>
+    // Simple lightbox logic
+    (function(){
+      const grid = document.getElementById('glGrid');
+      const dlg  = document.getElementById('glLightbox');
+      const img  = document.getElementById('glImg');
+      const cap  = document.getElementById('glCap');
+      const prev = document.getElementById('glPrev');
+      const next = document.getElementById('glNext');
+      const closeBtn = document.getElementById('glClose');
+
+      // Build an array of images for navigation
+      const items = Array.from(grid.querySelectorAll('img'));
+      let index = 0;
+
+      function show(i){
+        if (i < 0) i = items.length - 1;
+        if (i >= items.length) i = 0;
+        index = i;
+        const el = items[index];
+        // Use the same file; browser will render larger in dialog
+        img.src = el.src;
+        img.alt = el.alt || '';
+        cap.textContent = el.alt || '';
+      }
+
+      // Open on click
+      items.forEach((el, i) => {
+        el.style.cursor = 'zoom-in';
+        el.addEventListener('click', () => {
+          show(i);
+          dlg.showModal();
+        });
+      });
+
+      // Controls
+      prev.addEventListener('click', () => show(index - 1));
+      next.addEventListener('click', () => show(index + 1));
+      closeBtn.addEventListener('click', () => dlg.close());
+
+      // Close if clicking the backdrop area
+      dlg.addEventListener('click', (e) => {
+        const rect = dlg.querySelector('.gl-frame').getBoundingClientRect();
+        const inFrame = e.clientX >= rect.left && e.clientX <= rect.right &&
+                        e.clientY >= rect.top  && e.clientY <= rect.bottom;
+        if (!inFrame) dlg.close();
+      });
+
+      // Keyboard support
+      window.addEventListener('keydown', (e) => {
+        if (!dlg.open) return;
+        if (e.key === 'Escape') dlg.close();
+        if (e.key === 'ArrowLeft')  show(index - 1);
+        if (e.key === 'ArrowRight') show(index + 1);
+      }, { passive: true });
+    })();
+  </script>
 </body>
 </html>
